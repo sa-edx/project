@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  password  String
+  firstName String
+  lastName  String
+  roleId    String
+  role      Role       @relation(fields: [roleId], references: [id])
+  developer Developer?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Role {
+  id           String           @id @default(uuid())
+  name         String           @unique
+  description  String?
+  isSystemRole Boolean          @default(false)
+  users        User[]
+  permissions  RolePermission[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model Permission {
+  id              String           @id @default(uuid())
+  module          String
+  action          String
+  description     String?
+  rolePermissions RolePermission[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@unique([module, action])
+}
+
+model RolePermission {
+  id           String     @id @default(uuid())
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+
+  @@unique([roleId, permissionId])
+}
+
+model Developer {
+  id                 String    @id @default(uuid())
+  ownerUserId        String?   @unique
+  ownerUser          User?     @relation(fields: [ownerUserId], references: [id], onDelete: SetNull)
+  companyName        String
+  registrationNumber String?
+  contactPerson      String?
+  email              String?
+  phone              String?
+  website            String?
+  address            String?
+  country            String?
+  city               String?
+  logo               String?
+  description        String?
+  status             String    @default("active")
+  projects           Project[]
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model Project {
+  id            String    @id @default(uuid())
+  developerId   String
+  developer     Developer @relation(fields: [developerId], references: [id], onDelete: Restrict)
+  projectCode   String    @unique
+  projectName   String
+  projectType   String
+  description   String?
+  country       String
+  city          String
+  address       String
+  latitude      Decimal?
+  longitude     Decimal?
+  startingPrice Decimal?
+  status        String    @default("draft")
+  slug          String    @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}

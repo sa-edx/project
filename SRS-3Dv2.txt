@@ -1,0 +1,4419 @@
+﻿Software Requirements Specification (SRS)
+3D Interactive Real Estate Portal
+Version: 2.0
+Document Status: Draft
+Prepared For: Real Estate Developers & Property Marketing Companies
+Prepared By: Saeed Ahmed & Co.
+Date: 23rd July 2026
+
+Document Revision History
+Version
+Date
+Author
+Description
+1.0
+Initial Draft
+Client
+Initial SRS
+2.0
+July 2026
+AI
+Expanded professional SRS with functional and non-functional requirements
+
+Table of Contents
+
+1. Introduction
+1.1 Purpose
+This Software Requirements Specification (SRS) defines the functional, technical, and operational requirements for the 3D Interactive Real Estate Portal, a web-based platform that enables real estate developers to digitally showcase residential, commercial, and mixed-use projects through immersive 3D visualization, interactive maps, virtual tours, and comprehensive project management tools.
+The portal will support multiple developers and multiple projects within a single platform while providing a seamless experience for local buyers, overseas investors, sales agents, and administrators.
+The objective is to replace traditional brochures and static project websites with an interactive, data-driven property exploration platform capable of generating qualified leads, improving customer engagement, and increasing property sales.
+
+1.2 Business Objectives
+The portal aims to achieve the following business goals:
+Primary Objectives
+* Digitally showcase multiple real estate projects on a single platform. 
+* Increase qualified lead generation. 
+* Improve buyer engagement through immersive 3D experiences. 
+* Enable overseas investors to evaluate projects remotely. 
+* Reduce sales cycle through online virtual tours. 
+* Provide centralized project and inventory management. 
+* Support multilingual content and multiple currencies. 
+* Integrate with CRM systems for automated lead management. 
+* Reduce operational costs through self-hosted GIS and 3D technologies. 
+Secondary Objectives
+* Improve project discoverability. 
+* Provide accurate property information. 
+* Automate booking workflows. 
+* Increase transparency of inventory availability. 
+* Provide actionable analytics for developers. 
+
+1.3 Project Vision
+The platform will become a centralized digital marketplace where real estate developers can publish projects with interactive 3D visualization, allowing buyers to explore projects almost as if they were physically present.
+Unlike conventional property portals, the system will combine:
+* GIS Mapping 
+* 3D Models 
+* Virtual Tours 
+* Unit Availability 
+* Interactive Floor Plans 
+* ROI Calculators 
+* Distance Analysis 
+* Lead Management 
+* Booking System 
+into one integrated platform.
+
+1.4 Reference Website Review
+The following reference sites were reviewed to align the portal with current real estate marketing expectations.
+* suncitymonarch.com 
+  - Strong project landing page with clear configuration, pricing and RERA details. 
+  - Prominent WhatsApp, phone call, and appointment booking CTAs. 
+  - Dedicated navigation for Gallery, Location Map, 360° View, and Walkthrough. 
+  - Mobile-first enquiry flow and strong visual storytelling.
+
+Key takeaways:
+* Project pages should promote direct lead capture through WhatsApp, phone, email, and appointment booking.
+* Public pages should include location, gallery, walkthrough/360 view, project features, and regulatory information.
+* Buyer journeys should support quick inquiry, guided booking, and instant contact actions from all project views.
+
+2. Project Scope
+The scope of this project includes the design, development, deployment, and maintenance of a scalable multi-tenant real estate portal supporting multiple developers and projects.
+The system shall include:
+2.1 Multi-Project Hosting
+The platform shall support:
+* Unlimited developers 
+* Unlimited projects 
+* Unlimited buildings 
+* Unlimited units 
+* Separate project administration 
+* Shared infrastructure 
+
+2.2 Interactive Property Exploration
+Users shall be able to:
+* Browse projects 
+* Explore projects in 3D 
+* View apartment buildings 
+* Navigate floors 
+* Explore amenities 
+* View unit availability 
+* View nearby facilities 
+* View routes 
+* Watch videos 
+* Experience virtual tours 
+* Download brochures 
+
+2.3 Lead Generation
+The portal shall generate leads using:
+* Inquiry Forms 
+* WhatsApp Click-to-Chat 
+* Phone Call Requests 
+* Contact Forms 
+* Visit Booking 
+* Book Appointment CTAs 
+* Unit Reservation 
+* Download Brochure 
+* Newsletter Subscription 
+
+2.4 Property Sales Support
+The portal shall support:
+* Unit reservations 
+* Visit scheduling 
+* Payment plans 
+* ROI calculations 
+* Mortgage estimation 
+* CRM synchronization 
+* Sales agent assignment 
+
+2.5 Administration
+Administrators shall be able to manage:
+* Developers 
+* Projects 
+* Buildings 
+* Units 
+* Facilities 
+* Amenities 
+* Users 
+* Leads 
+* Bookings 
+* Visits 
+* CMS Pages 
+* Reports 
+
+3. Business Benefits
+The proposed platform will provide measurable benefits.
+For Developers
+* Lower marketing costs 
+* Better lead quality 
+* Faster sales cycle 
+* Centralized inventory 
+* Better reporting 
+* Reduced dependency on printed brochures 
+
+For Buyers
+* Interactive exploration 
+* Transparent pricing 
+* Live availability 
+* Remote property viewing 
+* Easy booking 
+* Easy comparison between projects 
+
+For Sales Teams
+* Lead tracking 
+* Customer history 
+* Automated reminders 
+* CRM integration 
+* Visit scheduling 
+* Conversion reporting 
+
+4. Assumptions
+The following assumptions apply.
+1. Developers will provide complete project information. 
+2. Developers will provide accurate unit inventory. 
+3. Every project will have accurate GPS coordinates. 
+4. 3D models will be prepared externally. 
+5. Internet connectivity is available. 
+6. Users will access the system using modern browsers. 
+7. Developers are responsible for updating inventory. 
+8. Currency exchange rates are available through external APIs. 
+9. CRM APIs remain available. 
+10. WhatsApp Business API credentials are provided by the client. 
+
+5. Constraints
+The solution must operate under the following constraints.
+Technical
+* Linux VPS hosting (Hostinger) 
+* PostgreSQL database 
+* Docker deployment 
+* Open-source GIS technologies where possible 
+* Minimal dependency on paid APIs 
+
+Business
+* Arabic and English only (Phase 1) 
+* Self-hosted 3D assets 
+* Support local and overseas investors 
+* Cloud migration optional 
+
+Operational
+* Role-based approvals 
+* Data backups 
+* Audit logs 
+* GDPR-compliant data handling (where applicable) 
+* Country-specific privacy compliance if operating in multiple jurisdictions 
+
+6. Success Criteria
+The project shall be considered successful when:
+* Multiple developers can independently manage projects. 
+* Buyers can browse and search projects smoothly. 
+* Interactive 3D visualization loads successfully. 
+* Unit availability is displayed accurately. 
+* Lead information is synchronized with CRM. 
+* Site visits can be scheduled online. 
+* Reservation workflow functions correctly. 
+* Portal supports Arabic and English. 
+* Mobile responsiveness is fully supported. 
+* Performance targets are achieved. 
+
+7. Out of Scope (Phase 1)
+The following features are intentionally excluded from the first release.
+* Online property purchase 
+* Payment gateway integration 
+* Blockchain ownership verification 
+* Mortgage approval workflow 
+* AI property valuation 
+* VR headset support 
+* Native Android application 
+* Native iOS application 
+* Property rental management 
+* Smart home integration 
+* Augmented Reality visualization 
+
+Section 2 � Stakeholders, User Roles & Functional Requirements (User & Access Management)
+
+8. Stakeholders
+The project involves multiple stakeholders with different responsibilities and expectations.
+Stakeholder
+Responsibilities
+Client / Portal Owner
+Owns the platform, defines business rules, manages subscriptions, oversees system operation
+Super Administrator
+Complete system administration and governance
+Developer / Project Owner
+Publishes and manages projects, inventory, pricing, media, and sales activities
+Sales Manager
+Assigns leads, monitors sales performance, and oversees sales agents
+Sales Agent / Channel Partner
+Markets projects, follows up with buyers, schedules visits, and closes sales
+Content Maker
+Creates and updates project-related content subject to approval
+Content Approver
+Reviews and approves content before publication
+Buyer
+Searches properties, books visits, submits inquiries, reserves units, and accesses project resources
+Guest Visitor
+Browses publicly available project information without authentication
+CRM Administrator
+Manages CRM integration, lead synchronization, and sales pipeline
+System Administrator
+Maintains infrastructure, deployments, security, backups, and monitoring
+
+9. User Roles
+The application shall implement Role-Based Access Control (RBAC), ensuring users can access only the features and data permitted by their assigned roles.
+9.1 Super Administrator
+The Super Administrator has unrestricted access to the platform.
+Responsibilities
+* Manage all users and roles 
+* Manage developers 
+* Configure portal settings 
+* Manage CMS content 
+* Monitor system health 
+* Access all projects 
+* View all reports 
+* Configure integrations 
+* Manage subscription plans 
+* View audit logs 
+* Restore backups 
+* Configure multilingual settings 
+* Manage currencies 
+* Configure notification templates 
+
+9.2 Developer / Project Owner
+Each developer manages only their own projects.
+Responsibilities
+* Create projects 
+* Edit projects 
+* Upload media 
+* Upload 3D models 
+* Manage buildings 
+* Manage floors 
+* Manage units 
+* Configure payment plans 
+* View leads 
+* Manage bookings 
+* Schedule site visits 
+* Publish virtual tours 
+* Generate reports 
+Cannot:
+* View other developers' projects 
+* Modify system configuration 
+* Create administrators 
+
+9.3 Sales Manager
+Responsibilities include:
+* Assign leads 
+* Monitor sales agents 
+* View CRM dashboard 
+* Generate sales reports 
+* Manage visit schedules 
+* Review conversion statistics 
+
+9.4 Sales Agent / Channel Partner
+Responsibilities include:
+* View assigned projects 
+* View assigned leads 
+* Contact buyers 
+* Schedule visits 
+* Reserve units (subject to permission) 
+* Update lead status 
+* Add follow-up notes 
+* Share brochures 
+* Share payment plans 
+
+9.5 Maker
+The Maker role prepares content but cannot publish it.
+Responsibilities:
+* Create projects 
+* Edit project information 
+* Upload media 
+* Upload brochures 
+* Add amenities 
+* Edit unit information 
+* Upload floor plans 
+* Create blog articles 
+All submitted changes enter a Pending Approval state.
+
+9.6 Approver
+Approvers review all changes submitted by Makers.
+They may:
+* Approve 
+* Reject 
+* Request modification 
+* Publish approved content 
+* View change history 
+* Compare revisions 
+
+9.7 Buyer
+Registered buyers can:
+* Search projects 
+* Save favorites 
+* Compare projects 
+* View unit details 
+* Download brochures 
+* View virtual tours 
+* Use ROI calculator 
+* Request site visits 
+* Reserve units 
+* Track booking status 
+* Receive notifications 
+* Update profile 
+
+9.8 Guest Visitor
+Guests may:
+* Browse public projects 
+* Search properties 
+* View limited images 
+* View project overview 
+* Contact sales 
+Guests cannot:
+* Reserve units 
+* Download brochures (optional, configurable) 
+* View pricing (optional, configurable) 
+* Access detailed 3D tours 
+* View availability 
+* Book visits 
+
+10. Permission Matrix
+Module
+Super Admin
+Developer
+Sales Manager
+Agent
+Maker
+Approver
+Buyer
+Guest
+View Projects
+?
+?
+?
+?
+?
+?
+?
+?
+Create Projects
+?
+?
+?
+?
+Draft
+?
+?
+?
+Edit Projects
+?
+?
+?
+?
+?
+Approve
+?
+?
+Delete Projects
+?
+Own
+?
+?
+?
+?
+?
+?
+Publish Projects
+?
+?
+?
+?
+?
+?
+?
+?
+Manage Units
+?
+?
+?
+?
+?
+?
+?
+?
+View Leads
+?
+Own
+Own
+Assigned
+?
+?
+?
+?
+Assign Leads
+?
+?
+?
+?
+?
+?
+?
+?
+Book Visit
+?
+?
+?
+?
+?
+?
+?
+?
+Reserve Unit
+?
+?
+?
+Optional
+?
+?
+?
+?
+CMS
+?
+Optional
+?
+?
+Draft
+Publish
+?
+?
+Reports
+?
+Own
+Own
+Assigned
+?
+?
+?
+?
+Audit Logs
+?
+Own
+?
+?
+?
+?
+?
+?
+
+11. Authentication & User Management Module
+Module ID: FR-100
+Description
+The system shall provide secure authentication, authorization, user registration, profile management, and access control.
+
+11.1 Functional Requirements
+FR-101 User Registration
+The system shall allow buyers to register using:
+* Email 
+* Mobile number 
+* Google Sign-In (optional) 
+* Apple Sign-In (future) 
+* Facebook Login (optional) 
+Registration fields:
+* First Name 
+* Last Name 
+* Email 
+* Mobile 
+* Country 
+* Preferred Language 
+* Password 
+
+FR-102 Login
+Users shall log in using:
+* Email 
+* Mobile Number 
+* Username (optional) 
+Authentication shall use secure encrypted passwords.
+
+FR-103 Multi-Factor Authentication (MFA)
+MFA shall be available for:
+* Super Admin 
+* Developers 
+* Sales Managers 
+Supported methods:
+* Email OTP 
+* SMS OTP 
+* Authenticator App (future) 
+
+FR-104 Password Recovery
+Users shall recover passwords using:
+* Email verification 
+* SMS OTP 
+Password reset links shall expire after a configurable time (e.g., 30 minutes).
+
+FR-105 Session Management
+The system shall:
+* Automatically expire inactive sessions 
+* Allow administrators to terminate active sessions 
+* Support configurable session timeout 
+* Record login history 
+
+FR-106 User Profile
+Users shall manage:
+* Name 
+* Profile Picture 
+* Contact Details 
+* Preferred Language 
+* Preferred Currency 
+* Communication Preferences 
+
+FR-107 Account Verification
+Buyer accounts may require:
+* Email verification 
+* Mobile verification 
+Developers shall be approved by Super Administrators before activation.
+
+FR-108 User Status
+Supported statuses:
+* Active 
+* Pending Approval 
+* Suspended 
+* Locked 
+* Disabled 
+* Deleted 
+
+FR-109 User Preferences
+The system shall store:
+* Language 
+* Currency 
+* Favorite Projects 
+* Saved Searches 
+* Notification Preferences 
+
+FR-110 Audit Logging
+The system shall record:
+* Login 
+* Logout 
+* Failed Login 
+* Password Change 
+* Profile Update 
+* Permission Change 
+* Account Lock 
+* Account Activation 
+
+12. Role-Based Access Control (RBAC)
+Module ID: FR-120
+The system shall implement Role-Based Access Control (RBAC).
+Permissions shall be assigned to roles instead of individual users, with support for exceptions where required.
+Supported permission types include:
+* Create 
+* Read 
+* Update 
+* Delete 
+* Approve 
+* Publish 
+* Export 
+* Import 
+* Assign 
+* Archive 
+
+13. Maker�Checker (Approval Workflow)
+The system shall support a Maker�Checker workflow for critical content and inventory updates.
+Workflow
+Maker Creates Record
+        ?
+        ?
+Pending Approval
+        ?
+        ?
+Approver Reviews
+        ?
+ ??????????????????
+ ?                ?
+Approve         Reject
+ ?                ?
+ ?                ?
+Published    Returned to Maker
+The workflow shall apply to:
+* Projects 
+* Units 
+* Pricing 
+* Payment Plans 
+* Brochures 
+* 3D Models 
+* Virtual Tours 
+* CMS Pages 
+* Blogs 
+Every approval action shall be recorded in the audit log.
+
+14. Notifications
+The system shall notify users of important events.
+Supported channels:
+* Email 
+* WhatsApp 
+* SMS (optional) 
+* In-app notifications 
+* Push notifications (future) 
+Examples include:
+* New lead assigned 
+* Site visit request 
+* Booking confirmation 
+* Booking cancellation 
+* Unit reservation 
+* Approval requests 
+* Content publication 
+* Password reset 
+* Project updates 
+
+15. Acceptance Criteria
+Authentication
+* Users can register successfully. 
+* Email verification works. 
+* Password reset works. 
+* Login/logout functions correctly. 
+* Session timeout is enforced. 
+RBAC
+* Users can access only authorized modules. 
+* Unauthorized access is denied and logged. 
+* Role changes take effect immediately. 
+Approval Workflow
+* Maker submissions are not visible until approved. 
+* Approvers can approve or reject changes. 
+* All approval actions are logged. 
+Notifications
+* Users receive notifications through configured channels. 
+* Failed notification deliveries are logged for retry. 
+
+Section 3 � Project, Building, Unit & Inventory Management
+
+16. Project Management Module
+Module ID: FR-200
+16.1 Description
+The Project Management Module enables authorized users to create, configure, publish, and maintain real estate projects. A project may represent a residential community, commercial development, mixed-use development, or villa community.
+Each project acts as the parent entity for buildings, floors, units, amenities, facilities, media assets, pricing, payment plans, virtual tours, and 3D models.
+
+16.2 Functional Requirements
+FR-201 Create Project
+Authorized users shall be able to create a new project.
+Mandatory fields:
+* Project Name 
+* Project Code (unique) 
+* Developer 
+* Project Type 
+* Country 
+* City 
+* Full Address 
+* Latitude 
+* Longitude 
+* Status 
+* Launch Date 
+
+FR-202 Project Information
+Each project shall support:
+* Short Description 
+* Detailed Description 
+* Developer Information 
+* Construction Status 
+* Possession/Handover Date 
+* Total Land Area 
+* Total Built-up Area 
+* Number of Buildings 
+* Number of Units 
+* Number of Floors 
+* Parking Information 
+* Green Area 
+* Project Highlights 
+* Investment Highlights 
+* RERA / Regulatory Details 
+* Registration / Approval Numbers 
+* Nearby Attractions 
+
+FR-203 Project Categories
+Supported project types include:
+* Apartment 
+* Villa 
+* Townhouse 
+* Commercial 
+* Office 
+* Retail 
+* Mixed Use 
+* Industrial 
+* Warehouse 
+* Land Plot 
+The administrator shall be able to configure additional project categories.
+
+FR-204 Project Status
+Supported statuses:
+* Draft 
+* Pending Approval 
+* Published 
+* Under Construction 
+* Ready to Move 
+* Sold Out 
+* Archived 
+* Hidden 
+
+FR-205 Multi-language Support
+Every project field intended for public display shall support multiple languages.
+Initially:
+* English 
+* Arabic 
+Future versions may support additional languages without database changes.
+
+FR-206 SEO Information
+Each project shall support:
+* SEO Title 
+* SEO Description 
+* SEO Keywords 
+* Canonical URL 
+* Open Graph Image 
+* Friendly URL (Slug) 
+Example:
+https://portal.com/projects/marina-heights
+
+16.3 Project Workflow
+Draft
+   ?
+   ?
+Pending Approval
+   ?
+   ?
+Published
+   ?
+   ?
+Updated
+   ?
+   ?
+Archived
+All transitions shall be recorded in the audit log.
+
+17. Building Management Module
+Module ID: FR-220
+A project may contain one or more buildings.
+
+FR-221 Create Building
+Each building shall contain:
+* Building Name 
+* Building Number 
+* Building Code 
+* Building Type 
+* Number of Floors 
+* Number of Units 
+* Construction Status 
+* GPS Coordinates (optional) 
+* Building Description 
+
+Building Types
+* Residential Tower 
+* Villa Block 
+* Office Tower 
+* Retail Block 
+* Hotel 
+* Mixed Use 
+
+Building Status
+* Planned 
+* Under Construction 
+* Ready 
+* Sold Out 
+* Closed 
+
+18. Floor Management Module
+Module ID: FR-240
+Each building shall contain one or more floors.
+
+FR-241 Floor Information
+Each floor stores:
+* Floor Number 
+* Floor Name 
+* Building 
+* Number of Units 
+* Floor Plan 
+* Emergency Exit Map 
+* Lift Locations 
+
+Floor Media
+Each floor may contain:
+* Floor Plan 
+* Interactive Floor Map 
+* 3D Floor Model 
+* 360� View 
+
+19. Unit Management Module
+Module ID: FR-260
+The Unit Management Module is the most important business module of the system.
+Every apartment, villa, office, or retail space shall be managed individually.
+
+FR-261 Unit Information
+Each unit shall contain:
+Identification
+* Unit Number 
+* Unit Code 
+* Tower 
+* Building 
+* Floor 
+* Project 
+
+Property Information
+* Unit Type 
+* Category 
+* Bedrooms 
+* Bathrooms 
+* Maid Room 
+* Study Room 
+* Balcony 
+* Terrace 
+* Parking Spaces 
+
+Dimensions
+* Built-up Area 
+* Carpet Area 
+* Balcony Area 
+* Plot Area 
+* Ceiling Height 
+
+Financial Information
+* Base Price 
+* Currency 
+* Discount 
+* Offer Price 
+* Booking Amount 
+* Registration Fee 
+* Service Charges 
+
+Construction
+* Handover Date 
+* Construction Progress 
+
+View
+Supported views:
+* Sea View 
+* Marina View 
+* Golf View 
+* Park View 
+* Pool View 
+* City View 
+* Mountain View 
+* Garden View 
+* Road View 
+
+Unit Status
+Supported statuses:
+* Available 
+* Reserved 
+* Booked 
+* Sold 
+* Blocked 
+* Under Maintenance 
+
+Unit Features
+Supported features include:
+* Smart Home 
+* Furnished 
+* Semi Furnished 
+* Kitchen Equipped 
+* Private Pool 
+* Private Garden 
+* Penthouse 
+* Duplex 
+* Corner Unit 
+
+FR-262 Unit Gallery
+Each unit shall support:
+* Images 
+* Videos 
+* Floor Plans 
+* PDF Brochures 
+* 360� Tours 
+* Virtual Walkthroughs 
+
+FR-263 Unit Comparison
+Buyers shall be able to compare multiple units based on:
+* Price 
+* Area 
+* Bedrooms 
+* Bathrooms 
+* Floor 
+* View 
+* ROI 
+* Payment Plan 
+* Amenities 
+
+20. Inventory Management Module
+Module ID: FR-280
+Inventory shall be maintained in real time.
+
+Inventory Status
+Supported inventory statuses:
+* Available 
+* Reserved 
+* Booked 
+* Sold 
+* On Hold 
+* Under Maintenance 
+Inventory changes shall immediately update:
+* Project Listings 
+* Search Results 
+* CRM 
+* Dashboards 
+* Reports 
+
+Reservation Rules
+A reservation shall:
+* Lock the unit 
+* Prevent duplicate booking 
+* Record reservation timestamp 
+* Store customer information 
+* Expire automatically after a configurable period (e.g., 48�72 hours) if not confirmed 
+
+21. Pricing Management Module
+Module ID: FR-300
+Each unit shall support one or more pricing records.
+
+Pricing Information
+* Base Price 
+* Promotional Price 
+* Currency 
+* Tax 
+* VAT 
+* Discount 
+* Seasonal Promotion 
+* Launch Offer 
+* Early Bird Offer 
+Price changes shall be version-controlled.
+
+Currency Support
+Supported currencies:
+* AED 
+* SAR 
+* QAR 
+* USD 
+* GBP 
+* EUR 
+Prices shall be stored in the project's base currency, with optional display conversions using configurable exchange rates.
+
+22. Payment Plan Module
+Module ID: FR-320
+Each project may contain multiple payment plans.
+
+Payment Plan Information
+* Plan Name 
+* Down Payment 
+* Booking Amount 
+* Installment Percentage 
+* Installment Frequency 
+* Construction Linked 
+* Handover Payment 
+* Post-Handover Payment 
+* Completion Date 
+
+Example
+Milestone
+Percentage
+Booking
+10%
+Construction
+20%
+Mid Construction
+20%
+Completion
+30%
+Handover
+20%
+The system shall allow developers to define any number of milestones.
+
+23. Media Management Module
+Module ID: FR-340
+The system shall provide a centralized media library.
+
+Supported Media
+* Images 
+* Videos 
+* Drone Videos 
+* Brochures 
+* PDFs 
+* Floor Plans 
+* Master Plans 
+* Virtual Tours 
+* 360� Panoramas 
+* 3D Models 
+* Documents 
+
+Features
+* Drag-and-drop upload 
+* Folder organization 
+* Media tagging 
+* Version history 
+* File preview 
+* Compression 
+* Watermarking (optional) 
+* CDN compatibility (future) 
+
+24. Amenities Management Module
+Module ID: FR-360
+Amenities shall be reusable across projects.
+
+Categories
+* Sports 
+* Leisure 
+* Healthcare 
+* Education 
+* Retail 
+* Community 
+* Security 
+* Entertainment 
+
+Examples
+* Swimming Pool 
+* Gym 
+* Spa 
+* Sauna 
+* Golf Course 
+* Tennis Court 
+* Basketball Court 
+* Children's Play Area 
+* Jogging Track 
+* BBQ Area 
+* Community Hall 
+* Supermarket 
+* Pharmacy 
+* Mosque/Church/Temple 
+* EV Charging 
+* Co-working Space 
+
+Each amenity shall support:
+* Name 
+* Icon 
+* Category 
+* Description 
+* Images 
+* Videos 
+* Rating 
+* Operating Hours (optional) 
+
+25. Project Dashboard
+Developers shall have access to a project dashboard displaying:
+* Total Units 
+* Available Units 
+* Reserved Units 
+* Sold Units 
+* Leads 
+* Visits Scheduled 
+* Conversion Rate 
+* Revenue 
+* Inventory Value 
+* Most Viewed Units 
+* Download Statistics 
+* Virtual Tour Views 
+
+26. Acceptance Criteria
+Project Management
+* Projects can be created with mandatory fields. 
+* Duplicate project codes are not allowed. 
+* Projects support multilingual content. 
+* Projects require approval before publication (if enabled). 
+Building Management
+* Multiple buildings can be added to a project. 
+* Building data can be edited without affecting other buildings. 
+Unit Management
+* Units are uniquely identified. 
+* Availability updates immediately after reservation or sale. 
+* Unit galleries support multiple media types. 
+* Unit comparisons display accurate information. 
+Inventory Management
+* Inventory reflects current unit status. 
+* Reservation expiry releases units automatically. 
+* Inventory updates are visible across all modules. 
+Pricing & Payment Plans
+* Multiple payment plans can be configured per project. 
+* Price changes are tracked with version history. 
+* Currency conversion displays correctly based on current exchange rates. 
+
+Section 4 � Interactive 3D Visualization, GIS Mapping & Property Discovery
+
+27. Interactive 3D Visualization Module
+Module ID: FR-400
+27.1 Description
+The Interactive 3D Visualization Module provides an immersive environment that allows users to explore projects, buildings, amenities, and units in a geographically accurate 3D environment. The platform shall integrate GIS data with custom 3D models to provide a realistic and engaging property exploration experience.
+The system shall support streaming optimized 3D models to desktop and mobile browsers while maintaining acceptable performance.
+
+27.2 Functional Requirements
+FR-401 3D Map Viewer
+The system shall provide an interactive 3D map viewer capable of:
+* Displaying projects on a geospatial map 
+* Rendering custom 3D building models 
+* Supporting smooth navigation 
+* Zooming 
+* Panning 
+* Rotation 
+* Tilt 
+* Full-screen mode 
+The viewer shall support mouse, keyboard, and touch interactions.
+
+FR-402 Supported Map Layers
+The platform shall support configurable base map providers, allowing the portal owner to choose one or more sources.
+Examples include:
+* OpenStreetMap 
+* MapLibre-compatible vector tiles 
+* Cesium World Terrain 
+* Self-hosted map tiles 
+* Commercial providers (optional) 
+The selected map provider should be configurable without requiring application code changes.
+
+FR-403 Project Rendering
+Each project shall be displayed using:
+* Geographic coordinates 
+* Project boundary (polygon) 
+* Building footprints 
+* Custom 3D models 
+* Project labels 
+* Project status indicators 
+
+FR-404 Building Rendering
+Each building shall support:
+* Accurate geographic positioning 
+* Individual selection 
+* Highlight on hover 
+* Building information popup 
+* Visibility toggling 
+* Floor selection 
+
+FR-405 Building Information
+When a building is selected, the system shall display:
+* Building Name 
+* Building Type 
+* Number of Floors 
+* Available Units 
+* Construction Status 
+* Estimated Completion 
+* Building Images 
+* Quick Actions 
+
+28. 3D Model Management
+Module ID: FR-420
+
+FR-421 Supported Formats
+The platform shall support optimized web formats such as:
+* 3D Tiles (recommended) 
+* glTF 
+* GLB 
+Additional formats (e.g., FBX, OBJ, IFC) may be accepted as source assets but should be converted into optimized delivery formats before publication.
+
+FR-422 Model Optimization
+Before publication, uploaded models should be validated and optimized to:
+* Reduce polygon count where appropriate 
+* Compress textures 
+* Generate levels of detail (LOD) 
+* Enable progressive streaming 
+The system shall reject unsupported or corrupted files with descriptive validation messages.
+
+FR-423 Level of Detail (LOD)
+To improve performance, models shall support multiple LODs.
+Example:
+Camera Distance
+Model Quality
+>1000 m
+Low
+300�1000 m
+Medium
+<300 m
+High
+LOD switching should be automatic and visually smooth.
+
+29. Unit Visualization
+Module ID: FR-440
+Each individual unit shall support interactive visualization.
+
+FR-441 Unit Selection
+Users shall be able to select a unit directly from:
+* Building 
+* Floor Plan 
+* Interactive Floor 
+* Search Results 
+* Unit List 
+
+FR-442 Unit Information Panel
+The panel shall display:
+* Unit Number 
+* Unit Type 
+* Bedrooms 
+* Bathrooms 
+* Area 
+* Price 
+* Availability 
+* Floor 
+* View Direction 
+* Payment Plan 
+* Gallery 
+* Download Brochure 
+* Book Visit 
+* Reserve Unit 
+
+FR-443 Unit Highlighting
+Selected units should be visually highlighted.
+Available color conventions:
+* Emerald � Available 
+* orange � Reserved 
+* Red � Sold 
+* Gray � Blocked 
+Colors shall be configurable.
+
+30. Floor Navigation
+Module ID: FR-460
+Users shall be able to navigate between floors.
+
+Features
+* Floor selector 
+* Vertical navigation 
+* Floor plan preview 
+* Unit filtering by floor 
+* Highlight current floor 
+
+Optional Feature
+Provide an "exploded view" where floors separate vertically to make unit selection easier.
+
+31. Apartment View Simulation
+Module ID: FR-480
+One of the platform's signature capabilities is simulating the view from a specific apartment.
+
+FR-481 Camera Positions
+Each unit may have one or more predefined camera positions, such as:
+* Living Room 
+* Master Bedroom 
+* Balcony 
+* Terrace 
+* Roof 
+* Garden 
+
+FR-482 View Simulation
+The system shall display:
+* Actual surrounding buildings (if modeled) 
+* Terrain 
+* Nearby landmarks 
+* Sea or lake view 
+* Parks 
+* Roads 
+* Amenities 
+The simulation should closely represent the expected real-world view.
+
+FR-483 Time-of-Day Simulation (Optional)
+The viewer may support:
+* Morning 
+* Afternoon 
+* Evening 
+* Night 
+This feature is optional for the initial release.
+
+32. 360� Virtual Tours
+Module ID: FR-500
+The platform shall support immersive virtual tours.
+
+Supported Content
+* Project Entrance 
+* Lobby 
+* Amenities 
+* Model Apartment 
+* Balcony 
+* Clubhouse 
+* Swimming Pool 
+* Gym 
+* Rooftop 
+* Retail Area 
+
+Viewer Features
+* Mouse/touch navigation 
+* Full-screen mode 
+* Hotspots 
+* Information popups 
+* Guided tour 
+* Auto rotation 
+* VR mode (future) 
+* Dedicated 360° View and Walkthrough landing pages accessible from the main project navigation.
+
+33. Nearby Facilities Module
+Module ID: FR-520
+The system shall display important nearby facilities around each project.
+
+Categories
+* Airports 
+* Metro Stations 
+* Bus Stops 
+* Schools 
+* Universities 
+* Hospitals 
+* Pharmacies 
+* Shopping Malls 
+* Restaurants 
+* Supermarkets 
+* Mosques 
+* Churches 
+* Parks 
+* Beaches 
+* Business Districts 
+Administrators shall be able to configure additional categories.
+
+Facility Information
+Each facility stores:
+* Name 
+* Category 
+* Latitude 
+* Longitude 
+* Address 
+* Description 
+* Operating Hours (optional) 
+* Contact Information (optional) 
+
+34. Distance & Travel Time Module
+Module ID: FR-540
+The system shall display pre-calculated distances and estimated travel times.
+
+Distance Types
+* Straight-line distance 
+* Road distance (if available) 
+* Estimated travel time by car 
+* Estimated walking time (optional) 
+
+Calculation Strategy
+To minimize external API usage:
+* Distances shall be calculated during project setup or update. 
+* Results shall be stored in the database. 
+* Recalculation can be triggered manually or on a scheduled basis when facilities change. 
+If live routing is required, it should be configurable and use an approved routing provider.
+
+Display Example
+Destination
+Distance
+Time
+Airport
+18 km
+22 min
+Hospital
+4 km
+8 min
+School
+2 km
+5 min
+Mall
+7 km
+12 min
+
+35. Interactive Route Guidance
+Module ID: FR-560
+Users shall be able to:
+* View suggested routes 
+* Display route polylines 
+* Open navigation in external mapping applications (optional) 
+* Select transportation mode (future) 
+
+36. Search & Discovery Module
+Module ID: FR-580
+The portal shall provide advanced search functionality.
+
+Search Parameters
+Users may search using:
+* Country 
+* City 
+* Community 
+* Project Name 
+* Developer 
+* Price Range 
+* Bedrooms 
+* Bathrooms 
+* Area 
+* Unit Type 
+* Completion Date 
+* Availability 
+* Amenities 
+* View Type 
+* Payment Plan 
+* Furnished Status 
+* Investment ROI 
+* Rental Yield 
+Search filters shall be combinable.
+
+Search Results
+Results shall support:
+* Grid View 
+* List View 
+* Map View 
+* 3D View 
+
+Sorting
+Users shall be able to sort by:
+* Price 
+* Area 
+* Newest 
+* Most Popular 
+* ROI 
+* Completion Date 
+
+37. Project Comparison
+Module ID: FR-600
+The system shall allow users to compare multiple projects.
+Comparison attributes include:
+* Price Range 
+* Unit Types 
+* Amenities 
+* Developer 
+* Completion Date 
+* Payment Plans 
+* Nearby Facilities 
+* ROI 
+* Rental Yield 
+Users should be able to compare at least three projects simultaneously.
+
+38. ROI Calculator
+Module ID: FR-620
+The portal shall include an investment calculator.
+Inputs:
+* Purchase Price 
+* Down Payment 
+* Rental Income 
+* Service Charges 
+* Annual Maintenance 
+* Appreciation Rate 
+Outputs:
+* Annual ROI 
+* Monthly Income 
+* Net Yield 
+* Estimated Value After Selected Years 
+Calculation assumptions should be configurable by administrators.
+
+39. Mortgage Calculator
+Module ID: FR-640
+Users shall be able to estimate mortgage payments.
+Inputs:
+* Property Price 
+* Down Payment 
+* Interest Rate 
+* Loan Term 
+Outputs:
+* Monthly Installment 
+* Total Interest 
+* Total Repayment 
+This calculator provides estimates only and does not constitute financial advice.
+
+40. Favorites & Saved Searches
+Module ID: FR-660
+Registered users shall be able to:
+* Save favorite projects 
+* Save favorite units 
+* Save search criteria 
+* Receive alerts for matching properties 
+* Share saved lists with others (optional) 
+
+41. Acceptance Criteria
+3D Viewer
+* Models load successfully. 
+* Navigation is smooth on supported browsers. 
+* Buildings are selectable. 
+* Unit highlighting functions correctly. 
+Unit Views
+* Users can select units from the 3D model or floor plans. 
+* Unit details display accurately. 
+* Availability status matches inventory. 
+Virtual Tours
+* 360� content loads successfully. 
+* Hotspots navigate correctly. 
+* Full-screen mode functions properly. 
+Nearby Facilities
+* Facilities display in the correct geographic locations. 
+* Distances match pre-calculated values. 
+* Facility categories are filterable. 
+Search
+* Multiple filters can be applied simultaneously. 
+* Sorting updates results correctly. 
+* Saved searches can be retrieved by the user. 
+
+Design Note: Map Technology
+While your original draft mentioned CesiumJS and MapStore, I recommend describing the SRS in terms of capabilities rather than mandating a single implementation. For example:
+"The system shall support an interactive 3D geospatial viewer capable of rendering optimized 3D models and configurable base map providers."
+This gives developers flexibility while still allowing you to specify CesiumJS in the accompanying Software Architecture Document (SAD). It avoids unnecessarily restricting implementation choices while preserving the functional requirement.
+
+Section 5 � Lead Management, CRM, Booking, Sales Pipeline & Business Operations
+
+42. Lead Management Module
+Module ID: FR-700
+42.1 Description
+The Lead Management Module captures, qualifies, assigns, tracks, and nurtures prospective buyers from multiple sources until the lead is converted into a sale or marked as closed.
+The system shall maintain a complete interaction history for every lead.
+
+42.2 Lead Sources
+The system shall capture leads from:
+* Website inquiry forms 
+* Unit inquiry forms 
+* Project inquiry forms 
+* WhatsApp 
+* Telephone call requests 
+* Email inquiries 
+* Walk-in customers 
+* Sales agents 
+* Channel partners 
+* CRM imports 
+* Property exhibitions 
+* QR code campaigns 
+* Social media campaigns 
+* Paid advertisements 
+* Landing pages 
+* API integrations 
+Administrators shall be able to configure additional lead sources.
+
+42.3 Lead Information
+Each lead shall contain:
+Personal Information
+* Lead ID (auto-generated) 
+* First Name 
+* Last Name 
+* Mobile Number 
+* Email Address 
+* Country 
+* City 
+* Nationality (optional) 
+* Preferred Language 
+Property Preferences
+* Project 
+* Unit Type 
+* Bedrooms 
+* Budget Range 
+* Preferred Payment Plan 
+* Preferred Location 
+* Investment Purpose 
+* Move-in Purpose 
+Lead Information
+* Lead Source 
+* Campaign 
+* Referral 
+* Assigned Salesperson 
+* Assigned Channel Partner 
+* Lead Score 
+* Priority 
+* Status 
+* Notes 
+
+43. Lead Qualification
+Module ID: FR-720
+The system shall allow sales staff to qualify leads.
+
+Lead Status
+Supported statuses:
+* New 
+* Contacted 
+* Interested 
+* Qualified 
+* Site Visit Scheduled 
+* Negotiation 
+* Reservation Pending 
+* Booked 
+* Won 
+* Lost 
+* Duplicate 
+* Closed 
+
+Lead Priority
+* Low 
+* Medium 
+* High 
+* Urgent 
+
+Lead Score
+The system should support configurable lead scoring based on factors such as:
+* Budget 
+* Buying timeline 
+* Engagement level 
+* Number of visits 
+* Brochure downloads 
+* Virtual tour views 
+* Repeat website visits 
+Lead scoring rules should be configurable by administrators.
+
+44. Sales Pipeline
+Module ID: FR-740
+The platform shall provide a configurable sales pipeline.
+Default Stages
+New Lead
+    ?
+    ?
+Qualified
+    ?
+    ?
+Property Suggested
+    ?
+    ?
+Site Visit
+    ?
+    ?
+Negotiation
+    ?
+    ?
+Reservation
+    ?
+    ?
+Booking
+    ?
+    ?
+Sale Completed
+The pipeline stages shall be configurable without requiring software changes.
+
+45. CRM Integration
+Module ID: FR-760
+The portal shall integrate with third-party CRM platforms.
+
+Supported CRM Systems
+Initial integrations may include:
+* HubSpot 
+* Zoho CRM 
+* Salesforce (future) 
+* Microsoft Dynamics (future) 
+The architecture should allow additional CRM connectors to be added with minimal changes.
+
+Synchronization
+The system shall synchronize:
+* Leads 
+* Customer Information 
+* Site Visits 
+* Reservations 
+* Bookings 
+* Sales Status 
+* Notes 
+* Follow-up Tasks 
+Synchronization should support both real-time APIs and scheduled batch jobs.
+
+Error Handling
+The system shall:
+* Log synchronization failures 
+* Retry failed operations 
+* Notify administrators after repeated failures 
+* Prevent duplicate lead creation 
+
+46. Inquiry Management
+Module ID: FR-780
+The portal shall allow users to submit inquiries from:
+* Project pages 
+* Unit pages 
+* Contact page 
+* Landing pages 
+* Brochure downloads 
+* Virtual tour pages 
+* One-click WhatsApp enquiry buttons 
+* Book Appointment CTAs 
+Each inquiry shall generate:
+* Lead record 
+* CRM entry 
+* Email notification 
+* WhatsApp notification (if configured) 
+* Audit log entry 
+
+47. Booking & Reservation Module
+Module ID: FR-800
+The Booking Module manages reservations and site visits.
+
+47.1 Unit Reservation
+Registered buyers or authorized sales representatives shall be able to reserve available units.
+Reservation Information
+* Reservation Number 
+* Unit 
+* Buyer 
+* Sales Agent 
+* Reservation Date 
+* Expiry Date 
+* Deposit Amount (optional) 
+* Reservation Status 
+
+Reservation Status
+* Pending 
+* Confirmed 
+* Expired 
+* Cancelled 
+* Converted to Booking 
+
+Reservation Rules
+* A reserved unit cannot be reserved again. 
+* Expired reservations automatically release inventory. 
+* Administrators may extend reservation periods. 
+* All reservation changes shall be recorded. 
+
+48. Site Visit Management
+Module ID: FR-820
+Users shall be able to request physical or virtual site visits.
+
+Visit Information
+* Visit ID 
+* Project 
+* Unit (optional) 
+* Buyer 
+* Sales Agent 
+* Visit Type 
+* Date 
+* Time 
+* Meeting Location 
+* Notes 
+
+Visit Types
+* Physical Visit 
+* Virtual Meeting 
+* Video Call 
+* Model Apartment Visit 
+
+Visit Status
+* Requested 
+* Confirmed 
+* Completed 
+* Cancelled 
+* No Show 
+* Rescheduled 
+
+Calendar Integration
+The system should support optional integration with:
+* Google Calendar 
+* Microsoft Outlook 
+Calendar invitations should be sent automatically upon confirmation.
+
+49. Communication Module
+Module ID: FR-840
+The system shall provide centralized communication capabilities.
+
+Email Notifications
+Examples:
+* Registration 
+* Password Reset 
+* Inquiry Confirmation 
+* Reservation Confirmation 
+* Visit Reminder 
+* Booking Confirmation 
+* Project Updates 
+
+WhatsApp Notifications
+Examples:
+* Inquiry acknowledgment 
+* Appointment reminders 
+* Reservation confirmation 
+* Promotional campaigns (subject to user consent) 
+* Follow-up messages 
+WhatsApp templates shall comply with the provider's approval requirements.
+
+SMS Notifications (Optional)
+Examples:
+* OTP 
+* Appointment Reminder 
+* Booking Confirmation 
+
+In-App Notifications
+Users shall receive notifications for:
+* New messages 
+* Booking updates 
+* Lead assignments 
+* Approval requests 
+* Project announcements 
+
+50. Reporting & Analytics
+Module ID: FR-860
+The platform shall provide dashboards and reports tailored to each role.
+
+Executive Dashboard
+The Super Administrator dashboard shall include:
+* Total Projects 
+* Total Developers 
+* Active Users 
+* Total Leads 
+* Conversion Rate 
+* Revenue (if applicable) 
+* System Health 
+* Pending Approvals 
+
+Developer Dashboard
+Displays:
+* Projects 
+* Units 
+* Available Inventory 
+* Reserved Units 
+* Booked Units 
+* Sales Performance 
+* Leads 
+* Visits 
+* Revenue Trends 
+* Top Performing Projects 
+
+Sales Dashboard
+Displays:
+* Assigned Leads 
+* Follow-up Tasks 
+* Site Visits 
+* Bookings 
+* Conversion Rate 
+* Monthly Targets 
+* Commission Summary (optional) 
+
+Standard Reports
+The system shall provide reports for:
+* Lead Sources 
+* Sales Performance 
+* Inventory Availability 
+* Site Visits 
+* Reservations 
+* Bookings 
+* Unit Status 
+* Developer Activity 
+* Marketing Campaign Performance 
+* Virtual Tour Usage 
+* Brochure Downloads 
+* Website Traffic (if analytics integrated) 
+Reports shall support:
+* PDF Export 
+* Excel Export 
+* CSV Export 
+* Scheduled Email Delivery 
+
+51. CMS (Content Management System)
+Module ID: FR-880
+The portal shall include a CMS for managing website content.
+
+Managed Content
+* Home Page 
+* About Us 
+* Contact Us 
+* Privacy Policy 
+* Terms & Conditions 
+* FAQ 
+* Blog 
+* News 
+* Careers 
+* Banners 
+* Promotional Pop-ups 
+* Footer Content 
+CMS content shall support version history and approval workflows.
+
+52. SEO Management
+Module ID: FR-900
+The system shall provide SEO configuration for public pages.
+
+SEO Features
+* Meta Title 
+* Meta Description 
+* Meta Keywords 
+* Canonical URLs 
+* XML Sitemap 
+* Robots.txt 
+* Structured Data (Schema.org) 
+* Open Graph Metadata 
+* Twitter Cards 
+The system should generate search engine-friendly URLs automatically.
+
+53. Audit Logs
+Module ID: FR-920
+The system shall maintain immutable audit logs for critical operations.
+
+Logged Events
+* User Login 
+* User Logout 
+* Failed Login 
+* Record Creation 
+* Record Update 
+* Record Deletion 
+* Approval Actions 
+* Reservation Changes 
+* Booking Changes 
+* Permission Changes 
+* Configuration Changes 
+* Data Export 
+Each log entry shall record:
+* Timestamp 
+* User 
+* IP Address (where available) 
+* Action 
+* Entity 
+* Before Value (where appropriate) 
+* After Value (where appropriate) 
+Audit logs should be searchable and retained according to configurable data retention policies.
+
+54. Acceptance Criteria
+Lead Management
+* Leads are captured from all configured sources. 
+* Duplicate detection works as configured. 
+* Lead assignment notifications are sent. 
+CRM
+* Lead synchronization completes successfully. 
+* Synchronization failures are logged and retried. 
+* No duplicate CRM records are created. 
+Reservations
+* Units cannot be double-booked. 
+* Expired reservations release inventory automatically. 
+* Reservation history is retained. 
+Site Visits
+* Buyers can request visits. 
+* Agents can confirm or reschedule visits. 
+* Calendar invitations are generated when enabled. 
+Reporting
+* Dashboards display current data. 
+* Reports export successfully. 
+* Scheduled reports are delivered to configured recipients. 
+CMS & SEO
+* Content updates follow the approval workflow. 
+* SEO metadata appears correctly in generated pages. 
+* XML sitemap updates automatically when public content changes. 
+
+Recommended Enhancements
+To further strengthen the platform, consider these optional enterprise features:
+1. Marketing Automation � Drip email campaigns, lead nurturing, abandoned inquiry reminders, and segmentation. 
+2. Commission Management � Define commission structures for channel partners and agents, with payout reports. 
+3. Document Management � Secure upload and management of reservation forms, KYC documents, contracts, and payment receipts. 
+4. E-signature Integration � Support services such as DocuSign or Adobe Acrobat Sign for reservation agreements. 
+5. Customer Portal � Allow buyers to track reservations, download documents, view payment plans, and receive project updates after booking. 
+
+Section 6 � Technical Architecture, Database, APIs, Security & Non-Functional Requirements
+
+55. System Architecture
+55.1 Architecture Overview
+The application shall adopt a modular, service-oriented architecture to ensure scalability, maintainability, and future extensibility.
+The solution shall consist of the following logical layers:
++--------------------------------------------------------+
+|                   Client Applications                  |
+|--------------------------------------------------------|
+| Web Browser | Mobile Browser | Future Mobile Apps      |
++--------------------------------------------------------+
+                     |
+                     v
++--------------------------------------------------------+
+|                  Web Application Layer                 |
+|--------------------------------------------------------|
+| UI | Authentication | Search | Booking | CMS | 3D View |
++--------------------------------------------------------+
+                     |
+                     v
++--------------------------------------------------------+
+|                   API / Business Layer                 |
+|--------------------------------------------------------|
+| User Service | Project Service | Lead Service          |
+| Booking Service | Media Service | Notification Service |
++--------------------------------------------------------+
+                     |
+                     v
++--------------------------------------------------------+
+|                    Data Layer                          |
+|--------------------------------------------------------|
+| PostgreSQL | Redis | File Storage | Audit Logs         |
++--------------------------------------------------------+
+                     |
+                     v
++--------------------------------------------------------+
+|               External Services                        |
+|--------------------------------------------------------|
+| CRM | Email | WhatsApp | Maps | Analytics | Exchange FX|
++--------------------------------------------------------+
+The architecture should support replacing individual components without requiring major changes to other modules.
+
+56. Proposed Technology Stack (Non-Binding)
+Note: These technologies are recommended based on current project goals. Vendors may propose equivalent technologies if they satisfy all functional and non-functional requirements.
+Layer
+Recommended Technology
+Frontend
+React / Next.js
+UI Framework
+Tailwind CSS
+Backend
+Node.js + NestJS (preferred) or Express
+ORM
+Prisma
+Database
+PostgreSQL + PostGIS
+Cache
+Redis
+3D Visualization
+CesiumJS
+Map Rendering
+MapLibre GL JS or equivalent
+File Storage
+Local Object Storage / S3-compatible storage
+Search
+PostgreSQL Full-Text Search (Phase 1), Elasticsearch/OpenSearch (future)
+Authentication
+JWT + Refresh Tokens
+Deployment
+Docker
+Reverse Proxy
+Nginx
+CI/CD
+GitHub Actions / GitLab CI
+Monitoring
+Prometheus + Grafana (or equivalent)
+
+57. Database Design
+57.1 Database Requirements
+The database shall support:
+* ACID-compliant transactions 
+* Referential integrity 
+* Spatial queries 
+* Audit logging 
+* Multi-language content 
+* Version history 
+* Soft deletion where appropriate 
+
+57.2 Core Entities
+Identity & Security
+* Users 
+* Roles 
+* Permissions 
+* UserSessions 
+* AuditLogs 
+
+Projects
+* Developers 
+* Projects 
+* Buildings 
+* Floors 
+* Units 
+
+Project Content
+* Amenities 
+* FacilityCategories 
+* Facilities 
+* Media 
+* VirtualTours 
+* Brochures 
+* PaymentPlans 
+* PaymentPlanMilestones 
+
+Sales
+* Leads 
+* LeadActivities 
+* Reservations 
+* Bookings 
+* SiteVisits 
+* Customers 
+
+CMS
+* Pages 
+* Blogs 
+* Banners 
+* FAQs 
+* News 
+
+Notifications
+* EmailQueue 
+* SMSQueue 
+* WhatsAppQueue 
+* NotificationTemplates 
+
+Configuration
+* Languages 
+* Currencies 
+* ExchangeRates 
+* Countries 
+* Cities 
+* Settings 
+
+58. Conceptual Entity Relationships
+Developer
+     |
+     | 1
+     |
+     | N
+Project
+     |
+     | 1
+     |
+     | N
+Building
+     |
+     | 1
+     |
+     | N
+Floor
+     |
+     | 1
+     |
+     | N
+Unit
+     |
+     +--------------------+
+     |                    |
+     |                    |
+Reservations         Virtual Tours
+     |
+Bookings
+Additional relationships:
+Project
+   |
+   +------ Amenities
+   |
+   +------ Media
+   |
+   +------ Facilities
+   |
+   +------ Payment Plans
+
+59. API Requirements
+59.1 API Design Principles
+The system shall expose secure REST APIs. Future versions may optionally expose GraphQL APIs.
+General Requirements
+* JSON request/response 
+* HTTPS only 
+* Versioned endpoints (e.g., /api/v1) 
+* Consistent error handling 
+* Pagination 
+* Filtering 
+* Sorting 
+* Validation 
+* Rate limiting 
+
+Example API Modules
+Authentication
+* Login 
+* Logout 
+* Register 
+* Refresh Token 
+* Forgot Password 
+* Reset Password 
+
+Projects
+* Create Project 
+* Update Project 
+* Delete Project 
+* List Projects 
+* Search Projects 
+* Publish Project 
+
+Units
+* Search Units 
+* Reserve Unit 
+* Update Availability 
+* Update Price 
+
+Leads
+* Create Lead 
+* Update Lead 
+* Assign Lead 
+* Convert Lead 
+
+Bookings
+* Create Booking 
+* Cancel Booking 
+* Confirm Booking 
+* Schedule Visit 
+
+Media
+* Upload Image 
+* Upload Video 
+* Upload 3D Model 
+* Download Brochure 
+
+60. External Integrations
+The application shall support configurable integrations.
+CRM
+* HubSpot 
+* Zoho CRM 
+* Salesforce (future) 
+
+Email
+* SendGrid 
+* AWS SES 
+* SMTP 
+
+Messaging
+* WhatsApp Business API 
+* SMS Gateway (configurable) 
+
+Maps
+Support configurable providers for:
+* Base maps 
+* Geocoding 
+* Routing (if enabled) 
+
+Currency Exchange
+The system should support configurable exchange-rate providers and scheduled updates.
+
+61. Security Requirements
+61.1 Authentication
+The system shall support:
+* JWT Authentication 
+* Refresh Tokens 
+* Configurable Session Timeout 
+* Multi-Factor Authentication (optional for buyers, required for administrators if enabled) 
+
+61.2 Authorization
+The platform shall implement Role-Based Access Control (RBAC) with configurable permissions.
+
+61.3 Password Security
+Passwords shall:
+* Never be stored in plain text 
+* Be hashed using a strong adaptive algorithm (e.g., bcrypt or Argon2) 
+* Meet configurable complexity requirements 
+
+61.4 Data Protection
+Sensitive data shall be protected:
+* In transit using TLS (HTTPS) 
+* At rest where required by applicable regulations 
+* Using least-privilege access principles 
+
+61.5 Security Controls
+The system shall include protections against:
+* SQL Injection 
+* Cross-Site Scripting (XSS) 
+* Cross-Site Request Forgery (CSRF), where applicable 
+* Clickjacking 
+* Brute-force attacks 
+* Session hijacking 
+Additional controls:
+* Rate limiting 
+* Account lockout after configurable failed login attempts 
+* CAPTCHA on public forms (configurable) 
+* Secure file upload validation 
+
+62. Performance Requirements
+Response Time Targets
+Function
+Target
+Homepage
+? 2 seconds
+Project Listing
+? 2 seconds
+Project Details
+? 3 seconds
+Search Results
+? 3 seconds
+API Response (95th percentile)
+? 500 ms
+Initial 3D Viewer Load*
+? 5 seconds
+*Assumes optimized assets and a standard broadband connection.
+
+Scalability Targets
+The architecture should support:
+* Horizontal scaling of application servers 
+* Read replicas for the database (future) 
+* CDN integration for static assets (future) 
+* Independent scaling of storage and media services 
+Performance targets should be validated during load testing based on expected traffic volumes.
+
+63. Availability & Reliability
+The production environment should target:
+* Availability: 99.9% monthly uptime (excluding planned maintenance) 
+* Automated service restart on failure 
+* Health checks for critical services 
+* Graceful degradation where practical 
+Recovery objectives (targets, subject to infrastructure selection):
+* Recovery Time Objective (RTO): ? 4 hours 
+* Recovery Point Objective (RPO): ? 24 hours 
+
+64. Backup & Disaster Recovery
+The system shall support:
+Database
+* Daily automated backups 
+* Weekly full backups 
+* Configurable retention periods 
+* Restore testing at defined intervals 
+Media
+* Scheduled backup of uploaded files 
+* Optional replication to secondary storage 
+Disaster Recovery
+Documented procedures shall include:
+* Infrastructure restoration 
+* Database recovery 
+* Media restoration 
+* DNS and SSL recovery 
+* Post-recovery verification 
+
+65. Logging & Monitoring
+The platform shall collect logs for:
+* API requests 
+* Authentication events 
+* Application errors 
+* Background jobs 
+* Integration failures 
+* System performance 
+Monitoring should include:
+* CPU 
+* Memory 
+* Disk usage 
+* Database health 
+* Queue length 
+* Application availability 
+* Error rates 
+Alerts should notify administrators of critical failures.
+
+66. Deployment Requirements
+The solution shall support separate environments:
+* Development 
+* Testing 
+* Staging 
+* Production 
+Deployment requirements:
+* Containerized deployment (recommended) 
+* Environment-specific configuration 
+* Automated migrations 
+* Rollback capability 
+* Secure secrets management 
+
+67. Accessibility Requirements
+The public website should aim to conform to WCAG 2.1 Level AA where practical.
+Minimum expectations include:
+* Keyboard navigation 
+* Alternative text for images 
+* Sufficient color contrast 
+* Responsive layouts 
+* Screen reader compatibility for core functions 
+
+68. Browser & Device Compatibility
+Supported browsers (latest stable versions and the previous major version where feasible):
+* Google Chrome 
+* Microsoft Edge 
+* Mozilla Firefox 
+* Safari 
+Supported devices:
+* Desktop 
+* Tablet 
+* Mobile 
+The user experience should adapt responsively to different screen sizes.
+
+69. Acceptance Criteria
+Architecture
+* Modules are independently deployable where applicable. 
+* APIs follow documented standards. 
+* External integrations are configurable. 
+Database
+* Referential integrity is enforced. 
+* Spatial queries return correct results. 
+* Soft-deleted records are excluded from standard queries. 
+Security
+* Authentication and authorization function correctly. 
+* Security testing identifies no critical vulnerabilities before release. 
+* Audit logs capture required administrative actions. 
+Performance
+* Response time targets are met under agreed load conditions. 
+* Load testing demonstrates acceptable performance for expected concurrent users. 
+Reliability
+* Backup restoration is successfully tested. 
+* Monitoring and alerting are operational. 
+* Health checks report service status accurately. 
+
+70. Future Roadmap (Post Phase 1)
+Potential enhancements include:
+* Native Android application 
+* Native iOS application 
+* AI-powered property recommendations 
+* AI chatbot 
+* Mortgage pre-qualification integration 
+* Online payments 
+* Digital contract signing 
+* Augmented Reality (AR) visualization 
+* Virtual Reality (VR) support 
+* Investor portfolio dashboard 
+* Property rental management 
+* Smart home integration 
+* Advanced GIS heat maps 
+* Predictive sales analytics 
+
+
+
+Appendix A � Data Dictionary
+A.1 Introduction
+This appendix defines the logical data model for the 3D Interactive Real Estate Portal.
+It specifies:
+* Entity name 
+* Field name 
+* Data type 
+* Required/Optional 
+* Constraints 
+* Description 
+Legend
+Symbol
+Meaning
+PK
+Primary Key
+FK
+Foreign Key
+NN
+Not Null
+UQ
+Unique
+AI
+Auto Increment
+
+A.2 Users
+Table: Users
+Field
+Type
+Constraints
+Description
+UserID
+UUID
+PK
+Unique User Identifier
+FirstName
+VARCHAR(100)
+NN
+First Name
+LastName
+VARCHAR(100)
+NN
+Last Name
+Email
+VARCHAR(255)
+NN, UQ
+Email Address
+Mobile
+VARCHAR(30)
+UQ
+Mobile Number
+PasswordHash
+VARCHAR(255)
+NN
+Encrypted Password
+RoleID
+UUID
+FK
+User Role
+PreferredLanguage
+VARCHAR(10)
+
+en, ar
+PreferredCurrency
+VARCHAR(10)
+
+AED, USD etc.
+ProfilePhoto
+VARCHAR(500)
+
+URL
+Status
+ENUM
+NN
+Active, Suspended etc.
+EmailVerified
+BOOLEAN
+
+
+MobileVerified
+BOOLEAN
+
+
+LastLogin
+TIMESTAMP
+
+
+CreatedAt
+TIMESTAMP
+NN
+
+UpdatedAt
+TIMESTAMP
+NN
+
+DeletedAt
+TIMESTAMP
+
+Soft Delete
+
+A.3 Roles
+Table: Roles
+Field
+Type
+Constraints
+Description
+RoleID
+UUID
+PK
+Role Identifier
+RoleName
+VARCHAR(100)
+UQ
+Super Admin
+Description
+TEXT
+
+
+IsSystemRole
+BOOLEAN
+
+
+
+A.4 Permissions
+Table: Permissions
+Field
+Type
+Constraints
+PermissionID
+UUID
+PK
+Module
+VARCHAR(100)
+NN
+Action
+VARCHAR(50)
+NN
+Description
+TEXT
+
+
+A.5 RolePermissions
+Field
+Type
+RolePermissionID
+UUID
+RoleID
+UUID FK
+PermissionID
+UUID FK
+
+A.6 Developers
+Table: Developers
+Field
+Type
+DeveloperID
+UUID
+CompanyName
+VARCHAR(200)
+RegistrationNumber
+VARCHAR(100)
+ContactPerson
+VARCHAR(150)
+Email
+VARCHAR(255)
+Phone
+VARCHAR(30)
+Website
+VARCHAR(255)
+Address
+TEXT
+Country
+VARCHAR(100)
+City
+VARCHAR(100)
+Logo
+VARCHAR(500)
+Description
+TEXT
+Status
+ENUM
+
+A.7 Projects
+Table: Projects
+Field
+Type
+Constraints
+ProjectID
+UUID
+PK
+DeveloperID
+UUID
+FK
+ProjectCode
+VARCHAR(50)
+UQ
+ProjectName
+VARCHAR(255)
+NN
+ProjectType
+ENUM
+NN
+Description
+TEXT
+
+Country
+VARCHAR(100)
+NN
+City
+VARCHAR(100)
+NN
+Address
+TEXT
+
+Latitude
+DECIMAL(10,8)
+
+Longitude
+DECIMAL(11,8)
+
+TotalLandArea
+DECIMAL(12,2)
+
+BuiltUpArea
+DECIMAL(12,2)
+
+ConstructionStatus
+ENUM
+
+LaunchDate
+DATE
+
+HandoverDate
+DATE
+
+TotalBuildings
+INTEGER
+
+TotalUnits
+INTEGER
+
+Status
+ENUM
+
+Slug
+VARCHAR(255)
+UQ
+CreatedAt
+TIMESTAMP
+
+UpdatedAt
+TIMESTAMP
+
+
+A.8 Buildings
+Field
+Type
+BuildingID
+UUID
+ProjectID
+UUID FK
+BuildingCode
+VARCHAR(50)
+BuildingName
+VARCHAR(150)
+BuildingType
+ENUM
+Floors
+INTEGER
+Units
+INTEGER
+Status
+ENUM
+
+A.9 Floors
+Field
+Type
+FloorID
+UUID
+BuildingID
+UUID FK
+FloorNumber
+INTEGER
+FloorName
+VARCHAR(100)
+FloorPlan
+VARCHAR(500)
+DisplayOrder
+INTEGER
+
+A.10 Units
+This is the most important table.
+Field
+Type
+UnitID
+UUID
+FloorID
+UUID FK
+BuildingID
+UUID FK
+ProjectID
+UUID FK
+UnitNumber
+VARCHAR(50)
+UnitCode
+VARCHAR(50)
+UnitType
+ENUM
+Bedrooms
+INTEGER
+Bathrooms
+INTEGER
+MaidRoom
+BOOLEAN
+StudyRoom
+BOOLEAN
+Balcony
+BOOLEAN
+Terrace
+BOOLEAN
+Area
+DECIMAL(10,2)
+BalconyArea
+DECIMAL(10,2)
+CarpetArea
+DECIMAL(10,2)
+ParkingSpaces
+INTEGER
+ViewType
+ENUM
+BasePrice
+DECIMAL(18,2)
+Currency
+VARCHAR(10)
+BookingAmount
+DECIMAL(18,2)
+Status
+ENUM
+Furnished
+BOOLEAN
+SmartHome
+BOOLEAN
+Featured
+BOOLEAN
+VirtualTourID
+UUID
+CameraPosition
+JSONB
+CreatedAt
+TIMESTAMP
+UpdatedAt
+TIMESTAMP
+
+A.11 Amenities
+Field
+Type
+AmenityID
+UUID
+Name
+VARCHAR(100)
+Category
+VARCHAR(100)
+Icon
+VARCHAR(255)
+Description
+TEXT
+Rating
+DECIMAL(3,2)
+
+A.12 ProjectAmenities
+Many-to-many relationship.
+Field
+Type
+ProjectAmenityID
+UUID
+ProjectID
+UUID FK
+AmenityID
+UUID FK
+
+A.13 Facilities
+Nearby facilities.
+Field
+Type
+FacilityID
+UUID
+Category
+VARCHAR(100)
+Name
+VARCHAR(255)
+Latitude
+DECIMAL
+Longitude
+DECIMAL
+Address
+TEXT
+Description
+TEXT
+
+A.14 ProjectFacilities
+Stores pre-calculated distances.
+Field
+Type
+ProjectFacilityID
+UUID
+ProjectID
+UUID FK
+FacilityID
+UUID FK
+DistanceKM
+DECIMAL(8,2)
+DriveTimeMinutes
+INTEGER
+WalkTimeMinutes
+INTEGER
+LastCalculated
+TIMESTAMP
+
+A.15 Media
+Central media library.
+Field
+Type
+MediaID
+UUID
+EntityType
+VARCHAR(50)
+EntityID
+UUID
+MediaType
+ENUM
+FileName
+VARCHAR(255)
+FilePath
+VARCHAR(500)
+FileSize
+BIGINT
+MimeType
+VARCHAR(100)
+AltText
+VARCHAR(255)
+DisplayOrder
+INTEGER
+
+A.16 VirtualTours
+Field
+Type
+TourID
+UUID
+ProjectID
+UUID
+UnitID
+UUID
+TourType
+ENUM
+URL
+VARCHAR(500)
+Thumbnail
+VARCHAR(500)
+Duration
+INTEGER
+
+A.17 PaymentPlans
+Field
+Type
+PaymentPlanID
+UUID
+ProjectID
+UUID
+Name
+VARCHAR(150)
+DownPayment
+DECIMAL
+BookingAmount
+DECIMAL
+Description
+TEXT
+
+A.18 PaymentPlanMilestones
+Field
+Type
+MilestoneID
+UUID
+PaymentPlanID
+UUID
+Milestone
+VARCHAR(150)
+Percentage
+DECIMAL(5,2)
+DueAfterDays
+INTEGER
+
+A.19 Leads
+Field
+Type
+LeadID
+UUID
+BuyerName
+VARCHAR(200)
+Email
+VARCHAR(255)
+Mobile
+VARCHAR(30)
+Country
+VARCHAR(100)
+Source
+VARCHAR(100)
+Campaign
+VARCHAR(100)
+AssignedTo
+UUID
+ProjectID
+UUID
+UnitID
+UUID
+Budget
+DECIMAL
+Status
+ENUM
+Priority
+ENUM
+Score
+INTEGER
+Notes
+TEXT
+
+A.20 Reservations
+Field
+Type
+ReservationID
+UUID
+LeadID
+UUID
+UnitID
+UUID
+ReservedBy
+UUID
+ReservationDate
+TIMESTAMP
+ExpiryDate
+TIMESTAMP
+DepositAmount
+DECIMAL
+Status
+ENUM
+
+A.21 Bookings
+Field
+Type
+BookingID
+UUID
+ReservationID
+UUID
+BookingDate
+TIMESTAMP
+BookingAmount
+DECIMAL
+Status
+ENUM
+
+A.22 SiteVisits
+Field
+Type
+VisitID
+UUID
+LeadID
+UUID
+ProjectID
+UUID
+VisitDate
+DATE
+VisitTime
+TIME
+AgentID
+UUID
+Status
+ENUM
+Remarks
+TEXT
+
+A.23 AuditLogs
+Field
+Type
+AuditID
+UUID
+UserID
+UUID
+Module
+VARCHAR(100)
+Action
+VARCHAR(100)
+EntityID
+UUID
+OldValue
+JSONB
+NewValue
+JSONB
+IPAddress
+VARCHAR(100)
+CreatedAt
+TIMESTAMP
+
+A.24 Notifications
+Field
+Type
+NotificationID
+UUID
+UserID
+UUID
+Type
+ENUM
+Subject
+VARCHAR(255)
+Message
+TEXT
+Status
+ENUM
+SentAt
+TIMESTAMP
+
+A.25 CMS Pages
+Field
+Type
+PageID
+UUID
+Title
+VARCHAR(255)
+Slug
+VARCHAR(255)
+Content
+TEXT
+SEOTitle
+VARCHAR(255)
+SEODescription
+TEXT
+Status
+ENUM
+
+Data Model Recommendations
+To make the solution robust and scalable, I recommend the following design principles:
+* Use UUIDs as primary keys instead of auto-increment integers. This simplifies data synchronization and distributed systems. 
+* Use soft deletes (DeletedAt) for transactional data such as Projects, Units, Leads, and Bookings to preserve history and support recovery. 
+* Store dynamic or structured attributes (e.g., camera positions, multilingual content, configuration) in JSONB where appropriate, while keeping core searchable fields normalized. 
+* Track creation and modification metadata (CreatedAt, UpdatedAt, CreatedBy, UpdatedBy) on all major entities. 
+* Use lookup/reference tables for configurable values (statuses, categories, currencies, languages) instead of hard-coded enums if administrators need to manage them. 
+
+
+Appendix B � UI Wireframes, Navigation Structure & Process Workflows
+
+B.1 Introduction
+This appendix defines the recommended user interface structure, navigation flow, and key business process workflows for the 3D Interactive Real Estate Portal.
+The purpose of this appendix is to:
+* Reduce ambiguity between business requirements and implementation. 
+* Provide guidance for UI/UX designers. 
+* Help frontend developers understand required screens. 
+* Assist QA teams in preparing test scenarios. 
+* Ensure consistent user journeys across different user roles. 
+The final UI design may differ visually; however, the functional structure and user experience principles defined here shall be maintained.
+
+B.2 Design Principles
+The portal interface shall follow these principles:
+User-Centric Design
+The system shall prioritize:
+* Fast property discovery 
+* Simple navigation 
+* Minimal steps to contact developers 
+* Immersive property exploration 
+
+Mobile-First Responsive Design
+The interface shall support:
+* Desktop 
+* Tablet 
+* Mobile 
+Important buyer actions shall remain accessible on smaller screens.
+
+Conversion-Focused Design
+Primary calls-to-action shall be visible throughout the buyer journey:
+Examples:
+* Schedule Visit 
+* Request Price 
+* Download Brochure 
+* Contact Agent 
+* Reserve Unit 
+* Start Virtual Tour 
+
+B.3 Public Portal Navigation Structure
+Main Navigation
+Home
+ |
+ +-- Projects
+ |      |
+ |      +-- Residential
+ |      +-- Commercial
+ |      +-- New Launches
+ |
+ +-- Developers
+ |
+ +-- Communities
+ |
+ +-- Investment Opportunities
+ |
+ +-- Virtual Tours
+ |
+ +-- About
+ |
+ +-- Blog
+ |
+ +-- Contact
+ |
+ +-- Login/Register
+
+B.4 Homepage Wireframe Concept
+Screen: Homepage
+Sections
+------------------------------------------------
+Header
+Logo | Search | Language | Currency | Login
+------------------------------------------------
+
+Hero Section
+
+[Interactive 3D Globe / Featured Project]
+
+Search Properties
+
+Country
+City
+Budget
+Bedrooms
+[Search Button]
+
+------------------------------------------------
+
+Featured Projects
+
+[Project Card]
+Image
+Price
+Location
+3D Tour Button
+
+------------------------------------------------
+
+Why Invest
+
+Statistics
+Projects
+Units
+Countries
+
+------------------------------------------------
+
+Virtual Experience
+
+360 Tour Preview
+
+------------------------------------------------
+
+Developers
+
+Partner Logos
+
+------------------------------------------------
+
+Footer
+
+Links
+Contact
+Social Media
+Policies
+
+------------------------------------------------
+
+B.5 Project Listing Screen
+Purpose
+Allows buyers to discover projects.
+
+Layout
+------------------------------------------------
+Search Filters
+
+Country
+City
+Price
+Bedrooms
+Developer
+Amenities
+
+------------------------------------------------
+
+Map View              Project Cards
+
+[3D Map]              Project 1
+                      Project 2
+                      Project 3
+
+------------------------------------------------
+
+Project Card
+Each card shall display:
+* Main Image 
+* Project Name 
+* Location 
+* Developer 
+* Starting Price 
+* Completion Date 
+* Unit Availability 
+* Favorite Button 
+* View Project Button 
+
+B.6 Project Detail Screen
+Purpose
+Main conversion page.
+
+Layout
+------------------------------------------------
+Project Hero Image / 3D Preview
+
+Project Name
+Location
+Starting Price
+
+[Explore 3D]
+[Virtual Tour]
+[Book Visit]
+
+------------------------------------------------
+
+Overview
+
+Description
+
+------------------------------------------------
+
+3D Interactive Viewer
+
+[Full Screen 3D Model]
+
+------------------------------------------------
+
+Buildings
+
+Tower A
+Tower B
+Tower C
+
+------------------------------------------------
+
+Available Units
+
+Filters
+
+Unit Cards
+
+------------------------------------------------
+
+Amenities
+
+Icons + Description
+
+------------------------------------------------
+
+Nearby Facilities
+
+Interactive Map
+
+------------------------------------------------
+
+Payment Plans
+
+------------------------------------------------
+
+ROI Calculator
+
+------------------------------------------------
+
+Download Brochure
+
+Contact Developer
+
+------------------------------------------------
+
+B.7 3D Viewer Interface
+Screen: Interactive 3D Explorer
+------------------------------------------------
+Toolbar
+
++
+-
+Rotate
+Full Screen
+Search
+Layers
+
+------------------------------------------------
+
+
+                 3D MODEL
+
+
+------------------------------------------------
+
+Information Panel
+
+Selected Building
+
+Tower A
+
+Available Units:
+120
+
+Floors:
+40
+
+[View Units]
+
+------------------------------------------------
+
+B.8 Unit Detail Screen
+Purpose
+Convert interest into inquiry/reservation.
+
+------------------------------------------------
+
+Unit Image / 3D View
+
+------------------------------------------------
+
+Unit Information
+
+Apartment 1504
+
+Bedrooms:
+3
+
+Area:
+145 sqm
+
+View:
+Sea View
+
+Price:
+$500,000
+
+Status:
+Available
+
+------------------------------------------------
+
+Floor Plan
+
+------------------------------------------------
+
+Gallery
+
+------------------------------------------------
+
+Payment Plan
+
+------------------------------------------------
+
+ROI Calculator
+
+------------------------------------------------
+
+Actions
+
+[Reserve Unit]
+
+[Schedule Visit]
+
+[Contact Agent]
+
+------------------------------------------------
+
+B.9 Buyer Dashboard
+Navigation
+Dashboard
+
+ |
+ +-- My Profile
+ |
+ +-- Favorites
+ |
+ +-- Saved Searches
+ |
+ +-- My Inquiries
+ |
+ +-- My Visits
+ |
+ +-- Reservations
+ |
+ +-- Documents
+ |
+ +-- Notifications
+
+B.10 Developer Dashboard
+Dashboard Layout
+------------------------------------------------
+Welcome Developer
+
+------------------------------------------------
+
+Statistics
+
+Projects:
+25
+
+Available Units:
+450
+
+Leads:
+1200
+
+Visits:
+80
+
+Sales:
+35
+
+------------------------------------------------
+
+Project Performance
+
+Chart
+
+------------------------------------------------
+
+Inventory Status
+
+Available
+Reserved
+Sold
+
+------------------------------------------------
+
+Recent Leads
+
+------------------------------------------------
+
+Pending Approvals
+
+------------------------------------------------
+
+B.11 Admin Dashboard
+------------------------------------------------
+
+System Overview
+
+Users
+Developers
+Projects
+Revenue
+Traffic
+
+------------------------------------------------
+
+Pending Approvals
+
+------------------------------------------------
+
+System Alerts
+
+------------------------------------------------
+
+Reports
+
+------------------------------------------------
+
+Configuration
+
+------------------------------------------------
+
+B.12 Business Process Workflows
+
+Workflow 1: Buyer Journey
+Visitor Opens Website
+
+        |
+        v
+
+Search Projects
+
+        |
+        v
+
+View Project
+
+        |
+        v
+
+Explore 3D Model
+
+        |
+        v
+
+Select Unit
+
+        |
+        v
+
+Submit Inquiry
+
+        |
+        v
+
+Lead Created
+
+        |
+        v
+
+Sales Agent Assigned
+
+        |
+        v
+
+Site Visit
+
+        |
+        v
+
+Reservation
+
+        |
+        v
+
+Booking
+
+Workflow 2: Project Publishing Workflow
+Developer/Maker Creates Project
+
+             |
+             v
+
+Add Buildings
+
+             |
+             v
+
+Add Units
+
+             |
+             v
+
+Upload Media
+
+             |
+             v
+
+Upload 3D Model
+
+             |
+             v
+
+Submit For Approval
+
+             |
+             v
+
+Approver Reviews
+
+        /          \
+
+Approve          Reject
+
+   |                |
+
+Publish        Return For Changes
+
+Workflow 3: Unit Reservation Workflow
+Buyer Selects Unit
+
+        |
+        v
+
+Check Availability
+
+        |
+        v
+
+Create Reservation
+
+        |
+        v
+
+Unit Status Changes
+
+Available
+      |
+      v
+Reserved
+
+        |
+        v
+
+Payment / Confirmation
+
+        |
+        v
+
+Booking Created
+
+        |
+        v
+
+Unit Status
+
+Booked
+
+Workflow 4: Lead Management Workflow
+Lead Generated
+
+      |
+      v
+
+Lead Scoring
+
+      |
+      v
+
+Assign Sales Agent
+
+      |
+      v
+
+Follow-up
+
+      |
+      v
+
+Qualified?
+
+   Yes        No
+
+   |           |
+
+Visit       Lost
+
+   |
+
+Negotiation
+
+   |
+
+Booking
+
+   |
+
+Sale
+
+Workflow 5: Maker-Checker Workflow
+Content Created
+
+      |
+      v
+
+Draft
+
+      |
+      v
+
+Submitted
+
+      |
+      v
+
+Approval Queue
+
+      |
+ ----------------
+ |              |
+Approve       Reject
+
+ |              |
+
+Published   Revision Required
+
+B.13 Recommended Screen List
+The final application should contain approximately the following screens:
+Public Screens
+1. Homepage 
+2. Project Listing 
+3. Project Details 
+4. 3D Explorer 
+5. Building View 
+6. Floor View 
+7. Unit Details 
+8. Virtual Tour Viewer 
+9. Developer Profile 
+10. Blog 
+11. Contact 
+12. Login 
+13. Registration 
+
+Buyer Screens
+14. Buyer Dashboard 
+15. Favorites 
+16. Saved Searches 
+17. Inquiry History 
+18. Visit History 
+19. Reservation Status 
+20. Documents 
+
+Developer Screens
+21. Developer Dashboard 
+22. Project Management 
+23. Building Management 
+24. Floor Management 
+25. Unit Management 
+26. Inventory Dashboard 
+27. Lead Management 
+28. Booking Management 
+29. Reports 
+
+Admin Screens
+30. Admin Dashboard 
+31. User Management 
+32. Role Management 
+33. Approval Queue 
+34. CMS Management 
+35. Configuration 
+36. Audit Logs 
+37. Integration Settings 
+
+B.14 UX Recommendations
+Reduce Buyer Friction
+The buyer should be able to:
+* Discover project 
+* View 3D model 
+* Select unit 
+* Request information 
+within fewer than five interactions.
+
+Persistent Contact Options
+Every major property screen should include:
+* WhatsApp button 
+* Call button 
+* Inquiry button 
+* Schedule Visit button 
+
+3D Experience Fallback
+Because 3D content requires higher device performance, the system should provide fallback options:
+If 3D cannot load:
+* Display images 
+* Display videos 
+* Display floor plans 
+* Display virtual tours 
+
+B.15 Final Deliverable Recommendation
+Before development begins, the following design documents should be produced:
+1. High-fidelity UI designs (Figma) 
+2. Design system 
+3. Component library 
+4. User journey maps 
+5. Mobile responsive designs 
+6. API-to-screen mapping document 
+7. Database ER diagram 
+8. QA test scenarios 
+
+
+
+Appendix C � API Specification & Integration Contract
+
+C.1 Introduction
+This appendix defines the API requirements for the 3D Interactive Real Estate Portal.
+The purpose of this document is to provide backend and integration teams with a clear understanding of:
+* API architecture 
+* Authentication requirements 
+* Endpoint structure 
+* Data exchange formats 
+* External integrations 
+* Error handling 
+* Security requirements 
+The API layer shall act as the communication bridge between:
+* Web frontend 
+* Mobile applications (future) 
+* Admin portal 
+* CRM systems 
+* Messaging services 
+* Analytics systems 
+* Third-party integrations 
+
+C.2 API Architecture Principles
+The API shall follow these principles:
+REST-Based Architecture
+The primary API style shall be REST.
+Characteristics:
+* JSON communication 
+* HTTPS only 
+* Stateless requests 
+* Version-controlled endpoints 
+* Standard HTTP methods 
+
+API Versioning
+All APIs shall be versioned.
+Example:
+/api/v1/projects
+/api/v1/units
+/api/v1/leads
+Future versions:
+/api/v2/projects
+Existing clients shall continue functioning after new versions are introduced.
+
+C.3 Base URL Structure
+Example:
+https://portal-domain.com/api/v1/
+
+C.4 Authentication
+C.4.1 Authentication Method
+The system shall use:
+* JWT Access Token 
+* Refresh Token 
+Authentication flow:
+User Login
+
+     |
+     v
+
+Credentials Validation
+
+     |
+     v
+
+Generate Access Token
+
+     |
+     v
+
+Generate Refresh Token
+
+     |
+     v
+
+Return Tokens
+
+C.5 Authentication APIs
+
+C.5.1 User Registration
+Endpoint
+POST /auth/register
+Request
+{
+ "firstName":"Ahmed",
+ "lastName":"Ali",
+ "email":"ahmed@example.com",
+ "mobile":"+971500000000",
+ "password":"********",
+ "language":"en"
+}
+
+Response
+{
+ "success":true,
+ "message":"Registration successful",
+ "userId":"uuid"
+}
+
+C.5.2 Login
+Endpoint
+POST /auth/login
+
+Request
+{
+ "email":"user@example.com",
+ "password":"********"
+}
+
+Response
+{
+ "accessToken":"xxxxx",
+ "refreshToken":"xxxxx",
+ "expiresIn":3600,
+ "user":{
+   "id":"uuid",
+   "role":"buyer"
+ }
+}
+
+C.5.3 Refresh Token
+Endpoint
+POST /auth/refresh
+
+Request
+{
+ "refreshToken":"xxxxx"
+}
+
+C.5.4 Logout
+Endpoint
+POST /auth/logout
+
+C.6 User APIs
+
+Get Current User
+GET /users/profile
+
+Response:
+{
+"id":"123",
+"name":"Ahmed Ali",
+"email":"ahmed@example.com",
+"role":"buyer"
+}
+
+Update Profile
+PUT /users/profile
+
+Change Password
+PUT /users/password
+
+C.7 Project APIs
+
+List Projects
+GET /projects
+
+Query Parameters
+Example:
+/projects?
+country=UAE&
+city=Dubai&
+minPrice=500000&
+maxPrice=2000000
+
+Response:
+{
+"data":[
+{
+"id":"123",
+"name":"Marina Heights",
+"location":"Dubai",
+"startingPrice":500000
+}
+]
+}
+
+Get Project Details
+GET /projects/{projectId}
+
+Response:
+{
+"id":"123",
+"name":"Marina Heights",
+"description":"Luxury apartments",
+"location":{
+ "latitude":25.123,
+ "longitude":55.456
+},
+"amenities":[
+"Swimming Pool",
+"Gym"
+]
+}
+
+Create Project
+POST /projects
+Roles:
+* Super Admin 
+* Developer 
+* Maker 
+
+Update Project
+PUT /projects/{id}
+
+Publish Project
+POST /projects/{id}/publish
+
+Archive Project
+POST /projects/{id}/archive
+
+C.8 Building APIs
+
+List Buildings
+GET /projects/{projectId}/buildings
+
+Create Building
+POST /projects/{projectId}/buildings
+
+Update Building
+PUT /buildings/{buildingId}
+
+C.9 Floor APIs
+
+Get Floors
+GET /buildings/{buildingId}/floors
+
+Get Floor Details
+GET /floors/{floorId}
+
+C.10 Unit APIs
+
+Search Units
+GET /units
+Filters:
+project
+building
+bedrooms
+price
+area
+status
+view
+
+Response:
+{
+"units":[
+{
+"id":"001",
+"number":"1504",
+"bedrooms":3,
+"area":145,
+"price":500000,
+"status":"available"
+}
+]
+}
+
+Get Unit Details
+GET /units/{unitId}
+
+Reserve Unit
+POST /units/{unitId}/reserve
+
+Request:
+{
+"buyerId":"123",
+"durationHours":48
+}
+
+Response:
+{
+"reservationId":"456",
+"status":"reserved"
+}
+
+Update Unit Status
+PUT /units/{unitId}/status
+
+C.11 3D Model APIs
+
+Upload 3D Model
+POST /projects/{id}/models
+Supported files:
+* 3D Tiles 
+* GLB 
+* glTF 
+
+Get Project 3D Model
+GET /projects/{id}/model
+Response:
+{
+"url":"https://cdn.com/project/model.json",
+"type":"3dtiles"
+}
+
+C.12 Virtual Tour APIs
+
+Create Tour
+POST /virtual-tours
+
+Get Tour
+GET /virtual-tours/{id}
+
+Response:
+{
+"type":"360",
+"url":"https://tour-url.com"
+}
+
+C.13 Facility & Distance APIs
+
+Get Nearby Facilities
+GET /projects/{id}/facilities
+
+Response:
+[
+{
+"name":"Airport",
+"distanceKm":18,
+"driveTimeMinutes":22
+}
+]
+
+Recalculate Distances
+POST /projects/{id}/calculate-distances
+Permission:
+Admin only.
+
+C.14 Lead APIs
+
+Create Lead
+POST /leads
+
+Request:
+{
+"name":"John Smith",
+"email":"john@example.com",
+"mobile":"+123456",
+"projectId":"123",
+"unitId":"456",
+"source":"website"
+}
+
+List Leads
+GET /leads
+Filters:
+* Status 
+* Agent 
+* Project 
+* Date range 
+
+Assign Lead
+PUT /leads/{id}/assign
+
+Request:
+{
+"agentId":"789"
+}
+
+Update Lead Status
+PUT /leads/{id}/status
+
+Add Lead Note
+POST /leads/{id}/notes
+
+C.15 Booking APIs
+
+Create Booking
+POST /bookings
+
+Get Booking
+GET /bookings/{id}
+
+Cancel Booking
+POST /bookings/{id}/cancel
+
+Confirm Booking
+POST /bookings/{id}/confirm
+
+C.16 Site Visit APIs
+
+Request Visit
+POST /visits
+
+Request:
+{
+"projectId":"123",
+"date":"2026-08-01",
+"time":"14:00",
+"type":"physical"
+}
+
+Update Visit Status
+PUT /visits/{id}/status
+
+C.17 Media APIs
+
+Upload Media
+POST /media/upload
+
+Supported:
+* Images 
+* Videos 
+* PDFs 
+* Brochures 
+* Floor plans 
+* 3D files 
+
+Delete Media
+DELETE /media/{id}
+
+C.18 CMS APIs
+
+Get Pages
+GET /cms/pages
+
+Create Page
+POST /cms/pages
+
+Publish Page
+POST /cms/pages/{id}/publish
+
+C.19 Notification APIs
+
+Send Notification
+POST /notifications/send
+
+Request:
+{
+"userId":"123",
+"type":"whatsapp",
+"template":"visit_confirmation"
+}
+
+C.20 CRM Integration API
+Purpose
+Synchronize leads and customer activities with external CRM platforms.
+
+Supported Operations
+Push Lead
+POST /integrations/crm/leads
+
+Update Lead
+PUT /integrations/crm/leads/{id}
+
+Sync Status
+GET /integrations/crm/status
+
+C.21 WhatsApp Integration
+The system shall support WhatsApp Business API integration.
+
+Supported messages:
+* Lead received 
+* Visit confirmation 
+* Reservation confirmation 
+* Payment reminder 
+* Project update 
+
+Example:
+POST /integrations/whatsapp/send
+
+Request:
+{
+"phone":"+971500000000",
+"template":"booking_confirmation",
+"parameters":[
+"Ahmed",
+"Marina Heights"
+]
+}
+
+C.22 Email Integration
+Supported providers:
+* SMTP 
+* SendGrid 
+* AWS SES 
+Operations:
+POST /integrations/email/send
+
+C.23 API Error Handling
+All APIs shall return standardized errors.
+Example:
+{
+"success":false,
+"error":{
+ "code":"UNIT_NOT_AVAILABLE",
+ "message":"Selected unit is no longer available"
+}
+}
+
+Standard Error Codes
+Code
+Meaning
+AUTH_FAILED
+Invalid credentials
+ACCESS_DENIED
+Permission denied
+VALIDATION_ERROR
+Invalid input
+NOT_FOUND
+Resource missing
+DUPLICATE_RECORD
+Duplicate entry
+UNIT_NOT_AVAILABLE
+Unit unavailable
+SERVER_ERROR
+Internal error
+
+C.24 API Security Requirements
+APIs shall implement:
+* HTTPS only 
+* JWT validation 
+* Role validation 
+* Request validation 
+* Rate limiting 
+* Input sanitization 
+* API logging 
+* IP monitoring for sensitive operations 
+
+C.25 API Documentation
+The development team shall provide:
+* OpenAPI / Swagger documentation 
+* Authentication guide 
+* Sample requests 
+* Sample responses 
+* Error documentation 
+* Integration instructions 
+
+C.26 API Acceptance Criteria
+The API layer shall be accepted when:
+? All required modules expose documented endpoints.
+? Authentication works securely.
+? Role permissions are enforced.
+? APIs return consistent JSON responses.
+? CRM synchronization works.
+? Notification integrations work.
+? API documentation is available.
+? Security testing shows no critical vulnerabilities.
+
+
+
+Appendix D � Color Scheme
+Recommendation for Your Specific Portal
+Considering your requirements:
+* 3D building visualization 
+* International buyers 
+* Arabic + English 
+* Overseas investors 
+* ROI calculators 
+* Developers and channel partners 
+* Premium property marketing 
+Final Brand Palette
+Core Brand
+Element
+Color
+Primary Dark
+Midnight Navy #0B1320
+Luxury Accent
+Champagne Gold #D4AF37
+Secondary Accent
+Emerald #064E3B
+Background
+Ivory Stone #F8F5EF
+Text
+Charcoal #222222
+
+Suggested UI Application
+Website Header
+????????????????????
+
+Logo (Gold)
+
+Projects
+Developers
+Virtual Tours
+Investment
+
+Language ??
+Currency $
+Login
+
+????????????????????
+Midnight Navy
+
+Main Hero Section
+Use:
+* Full-screen 3D model/video 
+* Dark gradient overlay 
+* Gold CTA buttons 
+Example:
+Explore Your Future Home
+
+[Explore 3D Experience]
+
+[Schedule Visit]
+
+Buttons
+Primary:
+Background:
+#D4AF37
+
+Text:
+#0B1320
+Hover:
+Background:
+#B8962E
+
+Secondary:
+Border:
+#D4AF37
+
+Text:
+White
+
+Status Colors for Property Inventory
+Colors shall be configurable.
+Very important for the unit availability system:
+Status
+Color
+Available
+Emerald #16A34A
+Limited Availability
+Gold #D4AF37
+Reserved
+Orange #EA580C
+Sold
+Red #B91C1C
+Coming Soon
+Blue #2563EB
+
+Typography Recommendation
+For English:
+Premium Style
+Headings:
+* Playfair Display
+or 
+* Cormorant Garamond 
+Body:
+* Inter 
+* Roboto 
+
+For Arabic:
+Use a modern Arabic font:
+* IBM Plex Sans Arabic 
+* Noto Kufi Arabic 
+
+Design Direction Summary
+My recommended final direction:
+"A luxury digital real estate experience combining the elegance of premium architecture with the sophistication of modern 3D technology."
+Palette:
+Midnight Navy
+#0B1320
+
+Champagne Gold
+#D4AF37
+
+Emerald
+#064E3B
+
+Ivory Stone
+#F8F5EF
+
+Charcoal
+#222222
+This palette should age well and still look premium 5�10 years from now, which is important for a real estate platform intended to host multiple developers and international projects.
+

@@ -1,0 +1,19 @@
+{
+  "name": "real-estate-portal",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev:api",
+    "dev:web": "npm run dev --workspace apps/web",
+    "dev:api": "npm run dev --workspace apps/api"
+  },
+  "devDependencies": {
+    "prisma": "^7.9.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.9.0"
+  }
+}

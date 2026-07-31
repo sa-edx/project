@@ -1,0 +1,22 @@
+{
+  "initialState": {
+    "defaultMap": {
+      "mapType": "openlayers",
+      "center": {
+        "x": 29.828022,
+        "y": 60.938362,
+        "crs": "EPSG:4326"
+      },
+      "zoom": 8
+    }
+  },
+  "map": {
+    "projection": "EPSG:3857",
+    "center": {
+      "x": 29.828022,
+      "y": 60.938362,
+      "crs": "EPSG:4326"
+    },
+    "zoom": 12
+  }
+}

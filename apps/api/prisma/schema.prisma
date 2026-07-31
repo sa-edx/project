@@ -1,0 +1,315 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  roleId    String
+  role      Role     @relation(fields: [roleId], references: [id])
+  developer Developer?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id            String          @id @default(uuid())
+  name          String          @unique
+  description   String?
+  isSystemRole   Boolean         @default(false)
+  users         User[]
+  permissions   RolePermission[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model Permission {
+  id            String          @id @default(uuid())
+  module        String
+  action        String
+  description   String?
+  rolePermissions RolePermission[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  @@unique([module, action])
+}
+
+model RolePermission {
+  id           String     @id @default(uuid())
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+
+  @@unique([roleId, permissionId])
+}
+
+model Developer {
+  id           String   @id @default(uuid())
+  ownerUserId  String?  @unique
+  ownerUser    User?    @relation(fields: [ownerUserId], references: [id], onDelete: SetNull)
+  companyName  String
+  registrationNumber String?
+  contactPerson String?
+  email        String?
+  phone        String?
+  website      String?
+  address      String?
+  country      String?
+  city         String?
+  logo         String?
+  description  String?
+  status       String   @default("active")
+  projects     Project[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Project {
+  id           String   @id @default(uuid())
+  developerId  String
+  developer    Developer @relation(fields: [developerId], references: [id], onDelete: Restrict)
+  projectCode  String   @unique
+  projectName  String
+  projectType  String
+  description  String?
+  country      String
+  city         String
+  address      String
+  latitude     Decimal?
+  longitude    Decimal?
+  startingPrice Decimal?
+  gallery      Json?
+  coverImage   String?
+  status       String   @default("draft")
+  slug         String   @unique
+  buildings    Building[]
+  floors       Floor[]
+  units        Unit[]
+  nearbyDestinations NearbyDestination[]
+  projectFacilities ProjectFacility[]
+  projectAmenities ProjectAmenity[]
+  leads        Lead[]       @relation("ProjectLeads")
+  siteVisits   SiteVisit[]  @relation("ProjectSiteVisits")
+  bookings     Booking[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Building {
+  id           String   @id @default(uuid())
+  projectId    String
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  buildingCode String
+  buildingName String
+  buildingType String
+  floorsCount  Int      @default(0)
+  unitsCount   Int      @default(0)
+  status       String   @default("active")
+  floors       Floor[]
+  units        Unit[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([projectId, buildingCode])
+}
+
+model Floor {
+  id           String   @id @default(uuid())
+  projectId    String
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  buildingId   String
+  building     Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  floorNumber  Int
+  floorName    String?
+  floorPlan    String?
+  displayOrder Int      @default(0)
+  status       String   @default("active")
+  units        Unit[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([buildingId, floorNumber])
+}
+
+model Unit {
+  id           String   @id @default(uuid())
+  projectId    String
+  project      Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  buildingId   String
+  building     Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  floorId      String
+  floor        Floor    @relation(fields: [floorId], references: [id], onDelete: Cascade)
+  unitNumber   String
+  unitCode     String
+  unitType     String
+  bedrooms     Int      @default(0)
+  bathrooms    Int      @default(0)
+  area         Decimal?
+  basePrice    Decimal?
+  currency     String   @default("AED")
+  status       String   @default("available")
+  featured     Boolean  @default(false)
+  viewType     String?
+  layoutPlan   String?
+  media        Json?
+  amenities    Json?
+  leads        Lead[]       @relation("UnitLeads")
+  siteVisits   SiteVisit[]  @relation("UnitSiteVisits")
+  bookings     Booking[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([floorId, unitNumber])
+  @@unique([projectId, unitCode])
+}
+
+model Lead {
+  id                String      @id @default(uuid())
+  projectId         String
+  project           Project     @relation("ProjectLeads", fields: [projectId], references: [id], onDelete: Cascade)
+  unitId            String?
+  unit              Unit?       @relation("UnitLeads", fields: [unitId], references: [id], onDelete: SetNull)
+  source            String      @default("public-enquiry")
+  firstName         String
+  lastName          String?
+  email             String?
+  phone             String?
+  country           String?
+  city              String?
+  preferredLanguage String?
+  notes             String?
+  status            String      @default("new")
+  priority          String      @default("normal")
+  assignedToName    String?
+  visitRequested    Boolean     @default(false)
+  preferredVisitAt   DateTime?
+  siteVisits        SiteVisit[]
+  bookings          Booking[]
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+}
+
+model SiteVisit {
+  id              String    @id @default(uuid())
+  leadId          String
+  lead            Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  projectId       String
+  project         Project   @relation("ProjectSiteVisits", fields: [projectId], references: [id], onDelete: Cascade)
+  unitId          String?
+  unit            Unit?     @relation("UnitSiteVisits", fields: [unitId], references: [id], onDelete: SetNull)
+  preferredVisitAt DateTime?
+  scheduledFor    DateTime?
+  status          String    @default("requested")
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Booking {
+  id              String    @id @default(uuid())
+  leadId          String
+  lead            Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  projectId       String
+  project         Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  unitId          String?
+  unit            Unit?     @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  bookingReference String    @unique
+  status          String    @default("reserved")
+  reservationAmount Decimal?
+  currency        String    @default("AED")
+  bookedAt        DateTime?
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model NearbyDestination {
+  id            String   @id @default(uuid())
+  projectId     String
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  label         String
+  category      String   @default("other")
+  latitude      Decimal?
+  longitude     Decimal?
+  distanceKm    Float
+  travelMinutes Int
+  mode          String   @default("drive")
+  notes         String?
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([projectId, sortOrder])
+}
+
+model Facility {
+  id            String   @id @default(uuid())
+  name          String
+  category      String   @default("other")
+  description   String?
+  latitude      Decimal?
+  longitude     Decimal?
+  address       String?
+  icon          String?
+  status        String   @default("active")
+  projectFacilities ProjectFacility[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ProjectFacility {
+  id            String   @id @default(uuid())
+  projectId     String
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  facilityId    String
+  facility      Facility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  sortOrder     Int      @default(0)
+  distanceKm    Float
+  travelMinutes Int
+  mode          String   @default("drive")
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([projectId, facilityId])
+  @@index([projectId, sortOrder])
+}
+
+model Amenity {
+  id               String   @id @default(uuid())
+  name             String
+  category         String   @default("other")
+  description      String?
+  image            String?
+  status           String   @default("active")
+  projectAmenities  ProjectAmenity[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model ProjectAmenity {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  amenityId   String
+  amenity     Amenity  @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+  sortOrder   Int      @default(0)
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([projectId, amenityId])
+  @@index([projectId, sortOrder])
+}
