@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createLead } from '../api.js';
-import MapStoreStaticMap from './MapStoreStaticMap.jsx';
+import CesiumProjectMap from './CesiumProjectMap.jsx';
+import { getProjectMapImage } from '../mapBuildingMarker.js';
 
 function formatMoney(value, currency = 'AED') {
   if (value === null || value === undefined || value === '') {
@@ -231,6 +232,8 @@ function getFacilityMapPoints(project, assignments) {
       kind: 'project',
       latitude: projectLatitude,
       longitude: projectLongitude,
+      image: getProjectMapImage(project),
+      modelUrl: typeof project?.model3dUrl === 'string' ? project.model3dUrl.trim() : '',
     });
   }
 
@@ -262,11 +265,15 @@ function LocationMapPreview({ project, assignments }) {
 
   return (
     <div className="location-map">
-      <MapStoreStaticMap points={points} />
+      <CesiumProjectMap points={points} />
       <div className="location-map__legend">
         {points.map((marker) => (
           <div className="location-map__legend-item" key={marker.id}>
-            <span className={`location-map__dot ${marker.kind === 'project' ? 'location-map__dot--project' : ''}`} />
+            {marker.kind === 'project' ? (
+              <img className="location-map__legend-building" src={marker.image} alt="" />
+            ) : (
+              <span className="location-map__dot" />
+            )}
             <span>{marker.label}</span>
           </div>
         ))}

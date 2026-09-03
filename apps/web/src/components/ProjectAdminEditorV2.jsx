@@ -44,6 +44,7 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
     status: 'draft',
     gallery: [],
     coverImage: '',
+    mapMarkerImage: '',
   });
   const [galleryUrl, setGalleryUrl] = useState('');
   const [dragIndex, setDragIndex] = useState(null);
@@ -71,6 +72,7 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
       status: project.status || 'draft',
       gallery,
       coverImage,
+      mapMarkerImage: project.mapMarkerImage || '',
     });
     setGalleryUrl('');
   }, [project]);
@@ -176,6 +178,7 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
             startingPrice: form.startingPrice === '' ? null : Number(form.startingPrice),
             gallery: form.gallery,
             coverImage: form.coverImage || null,
+            mapMarkerImage: form.mapMarkerImage || null,
             status: form.status,
           });
         }}
@@ -262,6 +265,41 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
             value={form.longitude}
             onChange={(e) => setForm((current) => ({ ...current, longitude: e.target.value }))}
           />
+        </div>
+        <div className="media-upload">
+          <div className="panel-head panel-head--compact">
+            <h4>Map building image</h4>
+            <p>This still replaces the project pin on the map. A default 3D-style building is used until you upload one.</p>
+          </div>
+          <div className="map-building-upload">
+            <img
+              className="map-building-upload__preview"
+              src={form.mapMarkerImage || '/map-building-default.svg'}
+              alt="Map building marker preview"
+            />
+            <div className="map-building-upload__actions">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) {
+                    return;
+                  }
+                  const image = await readFileAsDataUrl(file);
+                  setForm((current) => ({ ...current, mapMarkerImage: image }));
+                  e.target.value = '';
+                }}
+              />
+              {form.mapMarkerImage ? (
+                <button type="button" className="ghost" onClick={() => setForm((current) => ({ ...current, mapMarkerImage: '' }))}>
+                  Use default building
+                </button>
+              ) : (
+                <small>Default building shown until an image is saved.</small>
+              )}
+            </div>
+          </div>
         </div>
         <input
           type="number"

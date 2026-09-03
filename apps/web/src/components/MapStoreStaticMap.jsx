@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { DEFAULT_MAP_BUILDING_IMAGE } from '../mapBuildingMarker.js';
 
 const TILE_SIZE = 256;
 const DEFAULT_CENTER = { latitude: 25.2048, longitude: 55.2708 };
@@ -638,16 +639,29 @@ export default function MapStoreStaticMap({ points, focusPoints, routes, classNa
         </svg>
 
         <div className="location-map__markers" aria-hidden="true">
-          {markerPositions.map((point) => (
-            <span
-              key={point.id}
-              className={`location-map__pin ${point.kind === 'project' ? 'location-map__pin--project' : ''}`}
-              style={{
-                left: `${point.left}px`,
-                top: `${point.top}px`,
-              }}
-            />
-          ))}
+          {markerPositions.map((point) =>
+            point.kind === 'project' ? (
+              <span
+                key={point.id}
+                className="location-map__building"
+                style={{
+                  left: `${point.left}px`,
+                  top: `${point.top}px`,
+                }}
+              >
+                <img src={point.image || DEFAULT_MAP_BUILDING_IMAGE} alt="" />
+              </span>
+            ) : (
+              <span
+                key={point.id}
+                className="location-map__pin"
+                style={{
+                  left: `${point.left}px`,
+                  top: `${point.top}px`,
+                }}
+              />
+            ),
+          )}
         </div>
 
         <MapControls

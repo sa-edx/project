@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { getProjectMapImage } from '../mapBuildingMarker.js';
 function normalizeList(value) {
   if (Array.isArray(value)) {
     return value.filter(Boolean);
@@ -145,6 +146,7 @@ function buildMapPoints(project, selectedBuilding, selectedFacilityIds = []) {
       kind: 'project',
       latitude,
       longitude,
+      image: getProjectMapImage(project),
     };
     points.push(projectPoint);
     focusPoints.push(projectPoint);
@@ -218,7 +220,11 @@ function MapLegend({ points }) {
     <div className="public-map-legend">
       {points.map((point) => (
         <div className="public-map-legend__item" key={point.id}>
-          <span className={`public-map-legend__dot ${point.kind === 'project' ? 'public-map-legend__dot--project' : ''}`} />
+          {point.kind === 'project' ? (
+            <img className="public-map-legend__building" src={point.image} alt="" />
+          ) : (
+            <span className="public-map-legend__dot" />
+          )}
           <span>{point.label}</span>
         </div>
       ))}

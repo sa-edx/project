@@ -21,6 +21,7 @@ const projectInputSchema = z.object({
   startingPrice: z.number().optional().nullable(),
   gallery: z.array(z.string()).optional(),
   coverImage: z.string().optional().nullable(),
+  mapMarkerImage: z.string().optional().nullable(),
   status: z.string().optional(),
 });
 
@@ -32,6 +33,7 @@ function serializeProject(project) {
     longitude: project.longitude?.toString?.() ?? null,
     gallery: project.gallery || [],
     coverImage: project.coverImage || null,
+    mapMarkerImage: project.mapMarkerImage || null,
     nearbyDestinations: (project.nearbyDestinations || []).map((destination) => ({
       ...destination,
       latitude: destination.latitude?.toString?.() ?? null,
@@ -267,6 +269,7 @@ projectsRouter.post('/', authenticateRequest, requireRole('super-administrator',
         startingPrice: toDecimalInput(input.startingPrice),
         gallery: input.gallery || [],
         coverImage: input.coverImage || null,
+        mapMarkerImage: input.mapMarkerImage || null,
         status: input.status || 'draft',
         slug: buildProjectSlug(input.projectName, input.projectCode),
       },
@@ -319,6 +322,7 @@ projectsRouter.put('/:id', authenticateRequest, requireRole('super-administrator
         ...(input.startingPrice !== undefined ? { startingPrice: toDecimalInput(input.startingPrice) } : {}),
         ...(input.gallery !== undefined ? { gallery: input.gallery } : {}),
         ...(input.coverImage !== undefined ? { coverImage: input.coverImage } : {}),
+        ...(input.mapMarkerImage !== undefined ? { mapMarkerImage: input.mapMarkerImage } : {}),
         ...(input.status ? { status: input.status } : {}),
         ...(input.projectName || input.projectCode
           ? { slug: buildProjectSlug(input.projectName || existing.projectName, input.projectCode || existing.projectCode) }

@@ -44,7 +44,8 @@ import {
 } from './api.js';
 import AmenityManagerV2 from './components/AmenityManagerV2.jsx';
 import FacilityManagerV2 from './components/FacilityManagerV2.jsx';
-import MapStoreStaticMap from './components/MapStoreStaticMap.jsx';
+import CesiumProjectMap from './components/CesiumProjectMap.jsx';
+import { getProjectMapImage } from './mapBuildingMarker.js';
 import ProjectAdminEditorV2 from './components/ProjectAdminEditorV2.jsx';
 import PublicProjectLearnMoreV2 from './components/PublicProjectLearnMoreV2.jsx';
 import PublicProjectExplorerV2 from './components/PublicProjectExplorerV2.jsx';
@@ -135,6 +136,8 @@ function buildFullscreenMapData(project, building, selectedFacilityIds = []) {
       kind: 'project',
       latitude,
       longitude,
+      image: getProjectMapImage(project),
+      modelUrl: typeof project?.model3dUrl === 'string' ? project.model3dUrl.trim() : '',
     };
     points.push(projectPoint);
     focusPoints.push(projectPoint);
@@ -1575,7 +1578,7 @@ export default function App() {
           onClose={() => setPublicFullscreenDrawerOpen(false)}
         />
         <div className="public-fullscreen-map-page__map">
-          <MapStoreStaticMap
+          <CesiumProjectMap
             className="location-map__map location-map__map--interactive"
             points={fullscreenMapData?.points || []}
             focusPoints={fullscreenMapData?.focusPoints || []}

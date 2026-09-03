@@ -92,6 +92,7 @@ model Project {
   startingPrice Decimal?
   gallery      Json?
   coverImage   String?
+  mapMarkerImage String?
   status       String   @default("draft")
   slug         String   @unique
   buildings    Building[]

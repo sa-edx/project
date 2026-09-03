@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 148" fill="none">
+  <ellipse cx="60" cy="138" rx="28" ry="7" fill="#000" opacity="0.28"/>
+  <path d="M18 118 L60 136 L102 118 L102 52 L60 34 L18 52 Z" fill="#1a2a38"/>
+  <path d="M18 52 L60 70 L102 52 L60 34 Z" fill="#d6b15f"/>
+  <path d="M60 70 L102 52 L102 118 L60 136 Z" fill="#243848"/>
+  <path d="M18 52 L60 70 L60 136 L18 118 Z" fill="#31485c"/>
+  <path d="M42 46 L60 54 L78 46 L60 38 Z" fill="#c9a24a"/>
+  <rect x="56.5" y="18" width="7" height="22" fill="#8fa3b5"/>
+  <path d="M56.5 18 L63.5 18 L63.5 8 L56.5 12 Z" fill="#f3d48a"/>
+  <g fill="#7ed6c8" opacity="0.9">
+    <rect x="28" y="78" width="8" height="10" transform="skewY(22)"/>
+    <rect x="40" y="84" width="8" height="10" transform="skewY(22)"/>
+    <rect x="28" y="96" width="8" height="10" transform="skewY(22)"/>
+    <rect x="40" y="102" width="8" height="10" transform="skewY(22)"/>
+    <rect x="72" y="72" width="8" height="10" transform="skewY(-22)"/>
+    <rect x="84" y="66" width="8" height="10" transform="skewY(-22)"/>
+    <rect x="72" y="90" width="8" height="10" transform="skewY(-22)"/>
+    <rect x="84" y="84" width="8" height="10" transform="skewY(-22)"/>
+  </g>
+</svg>
