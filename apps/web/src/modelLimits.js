@@ -1,3 +1,4 @@
+export const MODEL_CHUNK_SIZE = 1 * 1024 * 1024;
 export const MAX_STORED_MODEL_BYTES = 15 * 1024 * 1024;
 export const MAX_UPLOAD_MODEL_BYTES = 80 * 1024 * 1024;
 

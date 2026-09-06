@@ -13,6 +13,7 @@ import { leadsRouter } from './routes/leads.js';
 import { facilitiesRouter } from './routes/facilities.js';
 import { healthRouter } from './routes/health.js';
 import { getProjectHandler, listProjectsHandler, projectsRouter } from './routes/projects.js';
+import { model3dRouter } from './routes/model3d.js';
 import { structureRouter } from './routes/structure.js';
 import { usersRouter } from './routes/users.js';
 
@@ -40,6 +41,7 @@ export function createApp() {
   app.get('/projects', listProjectsHandler);
   app.get('/projects/:id', getProjectHandler);
 
+  app.use('/projects', model3dRouter);
   app.use('/projects', projectsRouter);
   app.use('/', structureRouter);
 

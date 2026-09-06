@@ -1,13 +1,9 @@
-import express, { Router } from 'express';
+import { Router } from 'express';
 import { z } from 'zod';
-import fs from 'node:fs/promises';
-import path from 'node:path';
-import crypto from 'node:crypto';
 
 import { prisma } from '../lib/prisma.js';
 import { buildProjectSlug } from '../lib/slug.js';
 import { authenticateRequest, requireRole } from '../middleware/auth.js';
-import { optimizeProjectModelBuffer, MAX_STORED_MODEL_BYTES, MAX_UPLOAD_MODEL_BYTES } from '../lib/optimizeProjectModel.js';
 
 export const projectsRouter = Router();
 
@@ -32,7 +28,7 @@ const projectInputSchema = z.object({
   status: z.string().optional(),
 });
 
-function serializeProject(project) {
+export function serializeProject(project) {
   return {
     ...project,
     startingPrice: project.startingPrice?.toString?.() ?? null,
@@ -108,27 +104,6 @@ function toDecimalInput(value) {
   }
 
   return String(value);
-}
-
-function getModelFileExtension(fileName, mimeType) {
-  const lowerName = String(fileName || '').toLowerCase();
-  if (lowerName.endsWith('.glb')) {
-    return '.glb';
-  }
-
-  if (lowerName.endsWith('.gltf')) {
-    return '.gltf';
-  }
-
-  if (String(mimeType || '').includes('gltf-binary')) {
-    return '.glb';
-  }
-
-  if (String(mimeType || '').includes('gltf+json')) {
-    return '.gltf';
-  }
-
-  return '.glb';
 }
 
 async function resolveDeveloperIdForWrite(req, developerId) {
@@ -383,97 +358,6 @@ projectsRouter.put('/:id', authenticateRequest, requireRole('super-administrator
     next(error);
   }
 });
-
-projectsRouter.put(
-  '/:id/model-3d',
-  authenticateRequest,
-  requireRole('super-administrator', 'system-administrator', 'developer'),
-  express.raw({
-    type: ['application/octet-stream', 'model/gltf-binary', 'model/gltf+json', '*/*'],
-    limit: '80mb',
-  }),
-  async (req, res, next) => {
-    try {
-      const project = await prisma.project.findUnique({
-        where: { id: req.params.id },
-        select: { id: true, projectName: true, projectCode: true },
-      });
-
-      if (!project) {
-        return res.status(404).json({
-          error: 'NOT_FOUND',
-          message: 'Project not found.',
-        });
-      }
-
-      const body = req.body;
-      if (!Buffer.isBuffer(body) || !body.length) {
-        return res.status(400).json({
-          error: 'VALIDATION_ERROR',
-          message: 'No 3D model file was uploaded.',
-        });
-      }
-
-      if (body.length > MAX_UPLOAD_MODEL_BYTES) {
-        return res.status(413).json({
-          error: 'PAYLOAD_TOO_LARGE',
-          message: `Model is larger than ${Math.round(MAX_UPLOAD_MODEL_BYTES / (1024 * 1024))} MB.`,
-        });
-      }
-
-      const optimizeFlag = String(req.get('x-optimize-model') || '1').toLowerCase();
-      const shouldOptimize = optimizeFlag !== '0' && optimizeFlag !== 'false';
-      let storedBuffer = Buffer.from(body);
-      let optimizeMeta = {
-        optimized: false,
-        originalBytes: body.length,
-        storedBytes: body.length,
-      };
-
-      try {
-        const result = await optimizeProjectModelBuffer(storedBuffer, {
-          forceCompress: shouldOptimize || body.length > MAX_STORED_MODEL_BYTES,
-        });
-        storedBuffer = result.buffer;
-        optimizeMeta = {
-          optimized: result.optimized,
-          originalBytes: result.originalBytes,
-          storedBytes: result.storedBytes,
-        };
-      } catch (optimizeError) {
-        const status = optimizeError.status || 400;
-        return res.status(status).json({
-          error: optimizeError.code || 'MODEL_OPTIMIZE_FAILED',
-          message: optimizeError.message || 'Failed to optimize the 3D model.',
-        });
-      }
-
-      const fileName = `${project.projectCode || 'project'}-${project.id}-${crypto.randomUUID()}.glb`;
-      const uploadDir = path.join(process.cwd(), 'uploads', 'project-models');
-      const absolutePath = path.join(uploadDir, fileName);
-
-      await fs.mkdir(uploadDir, { recursive: true });
-      await fs.writeFile(absolutePath, storedBuffer);
-
-      const updated = await prisma.project.update({
-        where: { id: req.params.id },
-        data: {
-          model3dUrl: `/uploads/project-models/${fileName}`,
-        },
-        include: {
-          developer: true,
-        },
-      });
-
-      return res.json({
-        data: serializeProject(updated),
-        meta: optimizeMeta,
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
-);
 
 projectsRouter.delete('/:id', authenticateRequest, requireRole('super-administrator', 'system-administrator'), async (req, res, next) => {
   try {

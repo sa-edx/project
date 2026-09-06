@@ -1332,6 +1332,25 @@ h4 {
   color: var(--success);
 }
 
+.upload-progress {
+  display: grid;
+  gap: 8px;
+}
+
+.upload-progress__track {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--line, #d7ddd9) 80%, white);
+}
+
+.upload-progress__bar {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--success, #2f6f4e);
+  transition: width 0.2s ease-out;
+}
+
 .error-text {
   color: var(--danger);
 }

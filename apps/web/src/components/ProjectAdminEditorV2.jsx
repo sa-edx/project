@@ -70,6 +70,8 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
   const [galleryUrl, setGalleryUrl] = useState('');
   const [modelUrl, setModelUrl] = useState('');
   const [modelUploadState, setModelUploadState] = useState('');
+  const [modelUploadPercent, setModelUploadPercent] = useState(0);
+  const [modelUploading, setModelUploading] = useState(false);
   const [modelUploadError, setModelUploadError] = useState('');
   const [optimizeLargeModel, setOptimizeLargeModel] = useState(true);
   const [dragIndex, setDragIndex] = useState(null);
@@ -105,6 +107,8 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
     setGalleryUrl('');
     setModelUrl('');
     setModelUploadState('');
+    setModelUploadPercent(0);
+    setModelUploading(false);
     setModelUploadError('');
   }, [project]);
 
@@ -123,15 +127,19 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
       return;
     }
 
-    setModelUploadState(
-      check.needsOptimize
-        ? `Optimizing ${file.name} (${formatBytes(file.size)}) toward ${formatBytes(MAX_STORED_MODEL_BYTES)}...`
-        : `Uploading ${file.name} (${formatBytes(file.size)})...`,
-    );
+    setModelUploading(true);
+    setModelUploadPercent(1);
+    setModelUploadState(`Uploading ${file.name} (${formatBytes(file.size)}) in 1 MB chunks...`);
     setModelUploadError('');
 
     try {
-      const response = await uploadProjectModel3d(token, project.id, file, { optimize: optimizeLargeModel || check.needsOptimize });
+      const response = await uploadProjectModel3d(token, project.id, file, {
+        optimize: optimizeLargeModel || check.needsOptimize,
+        onProgress: ({ percent, message }) => {
+          setModelUploadPercent(percent);
+          setModelUploadState(message);
+        },
+      });
       const uploadedUrl = response?.data?.model3dUrl || '';
       if (!uploadedUrl) {
         throw new Error('Upload completed but no file URL was returned.');
@@ -143,10 +151,18 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
       const sizeNote = stored && original && stored !== original
         ? ` Reduced ${formatBytes(original)} → ${formatBytes(stored)}.`
         : '';
+      setModelUploadPercent(100);
       setModelUploadState(`3D model ready for Cesium.${sizeNote} Save heading/scale if you changed them, then open the public map.`);
     } catch (uploadError) {
-      setModelUploadError(uploadError.payload?.message || uploadError.message || 'Failed to upload 3D model.');
+      setModelUploadError(
+        uploadError.payload?.message
+        || uploadError.message
+        || 'Failed to upload 3D model. You can retry the same file to resume remaining chunks.',
+      );
       setModelUploadState('');
+      setModelUploadPercent(0);
+    } finally {
+      setModelUploading(false);
     }
   }
 
@@ -426,7 +442,17 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
             />
           </div>
 
-          {modelUploadState ? <p className="success-text">{modelUploadState}</p> : null}
+          {(modelUploading || (modelUploadPercent > 0 && modelUploadPercent < 100)) && modelUploadState ? (
+            <div className="upload-progress" role="status" aria-live="polite">
+              <div className="upload-progress__track">
+                <div className="upload-progress__bar" style={{ width: `${Math.min(100, Math.max(0, modelUploadPercent))}%` }} />
+              </div>
+              <p className="success-text">{modelUploadPercent}% — {modelUploadState}</p>
+            </div>
+          ) : null}
+          {!modelUploading && (modelUploadPercent === 0 || modelUploadPercent === 100) && modelUploadState ? (
+            <p className="success-text">{modelUploadState}</p>
+          ) : null}
           {modelUploadError ? <p className="error-text">{modelUploadError}</p> : null}
 
           <label className="check-row">
@@ -441,6 +467,7 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
           <input
             type="file"
             accept=".glb,.gltf,model/gltf-binary,model/gltf+json"
+            disabled={modelUploading}
             onChange={async (e) => {
               const file = e.target.files?.[0];
               if (!file) {

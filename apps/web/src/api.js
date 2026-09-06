@@ -1,3 +1,5 @@
+import { MODEL_CHUNK_SIZE } from './modelLimits.js';
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000';
 
 async function request(path, { token, ...options } = {}) {
@@ -134,29 +136,134 @@ export async function updateProject(token, projectId, payload) {
   });
 }
 
-export async function uploadProjectModel3d(token, projectId, file, { optimize = true } = {}) {
-  const response = await fetch(`${API_BASE_URL}/projects/${projectId}/model-3d`, {
-    method: 'PUT',
-    headers: {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      'Content-Type': file.type || 'application/octet-stream',
-      'x-file-name': file.name || 'model.glb',
-      'x-optimize-model': optimize ? '1' : '0',
-    },
-    body: file,
-  });
+export async function uploadProjectModel3d(token, projectId, file, { optimize = true, onProgress } = {}) {
+  const chunkSize = MODEL_CHUNK_SIZE;
+  const totalBytes = file.size;
+  const totalChunks = Math.max(1, Math.ceil(totalBytes / chunkSize));
+  const resumeKey = `model-upload:${projectId}:${file.name}:${file.size}:${file.lastModified}`;
 
-  const contentType = response.headers.get('content-type') || '';
-  const data = contentType.includes('application/json') ? await response.json() : null;
+  const report = (percent, message) => {
+    if (typeof onProgress === 'function') {
+      onProgress({ percent, message, totalBytes, totalChunks });
+    }
+  };
 
-  if (!response.ok) {
-    const error = new Error(data?.message || 'Request failed');
-    error.status = response.status;
-    error.payload = data;
-    throw error;
+  async function apiJson(path, options = {}) {
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      ...options,
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(options.headers || {}),
+      },
+    });
+    const contentType = response.headers.get('content-type') || '';
+    const data = contentType.includes('application/json') ? await response.json() : null;
+    if (!response.ok) {
+      const error = new Error(data?.message || `Request failed (${response.status})`);
+      error.status = response.status;
+      error.payload = data;
+      throw error;
+    }
+    return data;
   }
 
-  return data;
+  async function putChunk(uploadId, index, blob, attempt = 1) {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/projects/${projectId}/model-3d/sessions/${uploadId}/chunks/${index}`,
+        {
+          method: 'PUT',
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            'Content-Type': 'application/octet-stream',
+          },
+          body: blob,
+        },
+      );
+      const contentType = response.headers.get('content-type') || '';
+      const data = contentType.includes('application/json') ? await response.json() : null;
+      if (!response.ok) {
+        const error = new Error(data?.message || `Chunk ${index} failed (${response.status})`);
+        error.status = response.status;
+        error.payload = data;
+        throw error;
+      }
+      return data;
+    } catch (error) {
+      const status = Number(error?.status);
+      const retryable = !status || status >= 500 || status === 408 || status === 429;
+      if (!retryable || attempt >= 3) {
+        throw error;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 400 * attempt));
+      return putChunk(uploadId, index, blob, attempt + 1);
+    }
+  }
+
+  report(1, 'Starting chunked upload...');
+
+  let uploadId = '';
+  let received = new Set();
+
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(resumeKey) || 'null');
+    if (saved?.uploadId) {
+      try {
+        const existing = await apiJson(`/projects/${projectId}/model-3d/sessions/${saved.uploadId}`);
+        uploadId = existing?.data?.uploadId || '';
+        received = new Set((existing?.data?.receivedChunks || []).map(Number));
+      } catch {
+        window.localStorage.removeItem(resumeKey);
+      }
+    }
+  } catch {
+    window.localStorage.removeItem(resumeKey);
+  }
+
+  if (!uploadId) {
+    const created = await apiJson(`/projects/${projectId}/model-3d/sessions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fileName: file.name || 'model.glb',
+        totalBytes,
+        chunkSize,
+        optimize,
+      }),
+    });
+    uploadId = created?.data?.uploadId;
+    if (!uploadId) {
+      throw new Error('The server did not return an upload session id.');
+    }
+    window.localStorage.setItem(resumeKey, JSON.stringify({ uploadId }));
+  }
+
+  if (received.size) {
+    report(Math.round((received.size / totalChunks) * 90), `Resuming upload (${received.size}/${totalChunks} chunks already on the server)...`);
+  }
+
+  for (let index = 0; index < totalChunks; index += 1) {
+    if (received.has(index)) {
+      report(Math.round(((index + 1) / totalChunks) * 90), `Skipped uploaded chunk ${index + 1}/${totalChunks}`);
+      continue;
+    }
+
+    const start = index * chunkSize;
+    const end = Math.min(start + chunkSize, totalBytes);
+    await putChunk(uploadId, index, file.slice(start, end));
+    received.add(index);
+    report(Math.round(((index + 1) / totalChunks) * 90), `Uploaded chunk ${index + 1}/${totalChunks}`);
+  }
+
+  report(92, 'Assembling and optimizing model on the server...');
+  const completed = await apiJson(`/projects/${projectId}/model-3d/sessions/${uploadId}/complete`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: '{}',
+  });
+  window.localStorage.removeItem(resumeKey);
+  report(100, 'Upload complete.');
+  return completed;
 }
 
 export async function deleteProject(token, projectId) {
