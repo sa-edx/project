@@ -134,6 +134,31 @@ export async function updateProject(token, projectId, payload) {
   });
 }
 
+export async function uploadProjectModel3d(token, projectId, file, { optimize = true } = {}) {
+  const response = await fetch(`${API_BASE_URL}/projects/${projectId}/model-3d`, {
+    method: 'PUT',
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      'Content-Type': file.type || 'application/octet-stream',
+      'x-file-name': file.name || 'model.glb',
+      'x-optimize-model': optimize ? '1' : '0',
+    },
+    body: file,
+  });
+
+  const contentType = response.headers.get('content-type') || '';
+  const data = contentType.includes('application/json') ? await response.json() : null;
+
+  if (!response.ok) {
+    const error = new Error(data?.message || 'Request failed');
+    error.status = response.status;
+    error.payload = data;
+    throw error;
+  }
+
+  return data;
+}
+
 export async function deleteProject(token, projectId) {
   return request(`/projects/${projectId}`, {
     token,

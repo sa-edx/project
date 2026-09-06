@@ -102,7 +102,10 @@ export function createApp() {
       return {
         statusCode: 400,
         error: 'VALIDATION_ERROR',
-        message: 'Invalid data was submitted. Please check the form values and try again.',
+        message:
+          process.env.NODE_ENV === 'production'
+            ? 'Invalid data was submitted. Please check the form values and try again.'
+            : err.message.split('\n').filter(Boolean).slice(0, 4).join(' '),
       };
     }
 

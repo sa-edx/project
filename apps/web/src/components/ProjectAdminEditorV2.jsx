@@ -1,4 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { uploadProjectModel3d } from '../api.js';
+import { resolveMediaUrl } from '../mediaUrl.js';
+import Project3DViewer from './Project3DViewer.jsx';
+import {
+  formatBytes,
+  MAX_STORED_MODEL_BYTES,
+  MODEL_OPTIMIZATION_TIPS,
+  validateModelFile,
+} from '../modelLimits.js';
 
 function isImageSource(value) {
   return typeof value === 'string' && (value.startsWith('data:image/') || /\.(png|jpe?g|webp|gif|avif)(\?.*)?$/i.test(value));
@@ -28,6 +37,15 @@ function getPreferredCover(gallery, coverImage) {
   return gallery[0] || '';
 }
 
+function toOptionalNumber(value) {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : null;
+}
+
 export default function ProjectAdminEditorV2({ project, developers, token, onSave, onDelete, busy, onDeveloperChange }) {
   const [form, setForm] = useState({
     developerId: '',
@@ -45,8 +63,15 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
     gallery: [],
     coverImage: '',
     mapMarkerImage: '',
+    model3dUrl: '',
+    model3dHeading: '0',
+    model3dScale: '1',
   });
   const [galleryUrl, setGalleryUrl] = useState('');
+  const [modelUrl, setModelUrl] = useState('');
+  const [modelUploadState, setModelUploadState] = useState('');
+  const [modelUploadError, setModelUploadError] = useState('');
+  const [optimizeLargeModel, setOptimizeLargeModel] = useState(true);
   const [dragIndex, setDragIndex] = useState(null);
 
   useEffect(() => {
@@ -73,11 +98,57 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
       gallery,
       coverImage,
       mapMarkerImage: project.mapMarkerImage || '',
+      model3dUrl: project.model3dUrl || '',
+      model3dHeading: project.model3dHeading ?? '0',
+      model3dScale: project.model3dScale ?? '1',
     });
     setGalleryUrl('');
+    setModelUrl('');
+    setModelUploadState('');
+    setModelUploadError('');
   }, [project]);
 
   const activeCoverImage = useMemo(() => getPreferredCover(form.gallery, form.coverImage), [form.gallery, form.coverImage]);
+  const previewModelUrl = useMemo(() => resolveMediaUrl(form.model3dUrl), [form.model3dUrl]);
+
+  async function handleModelUpload(file) {
+    if (!file || !project?.id) {
+      return;
+    }
+
+    const check = validateModelFile(file, { allowOptimize: optimizeLargeModel });
+    if (!check.ok) {
+      setModelUploadError(check.message);
+      setModelUploadState('');
+      return;
+    }
+
+    setModelUploadState(
+      check.needsOptimize
+        ? `Optimizing ${file.name} (${formatBytes(file.size)}) toward ${formatBytes(MAX_STORED_MODEL_BYTES)}...`
+        : `Uploading ${file.name} (${formatBytes(file.size)})...`,
+    );
+    setModelUploadError('');
+
+    try {
+      const response = await uploadProjectModel3d(token, project.id, file, { optimize: optimizeLargeModel || check.needsOptimize });
+      const uploadedUrl = response?.data?.model3dUrl || '';
+      if (!uploadedUrl) {
+        throw new Error('Upload completed but no file URL was returned.');
+      }
+
+      setForm((current) => ({ ...current, model3dUrl: uploadedUrl }));
+      const stored = response?.meta?.storedBytes;
+      const original = response?.meta?.originalBytes;
+      const sizeNote = stored && original && stored !== original
+        ? ` Reduced ${formatBytes(original)} → ${formatBytes(stored)}.`
+        : '';
+      setModelUploadState(`3D model ready for Cesium.${sizeNote} Save heading/scale if you changed them, then open the public map.`);
+    } catch (uploadError) {
+      setModelUploadError(uploadError.payload?.message || uploadError.message || 'Failed to upload 3D model.');
+      setModelUploadState('');
+    }
+  }
 
   async function handleGalleryFiles(fileList) {
     const files = Array.from(fileList || []);
@@ -173,12 +244,15 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
             country: form.country,
             city: form.city,
             address: form.address,
-            latitude: form.latitude === '' ? null : Number(form.latitude),
-            longitude: form.longitude === '' ? null : Number(form.longitude),
-            startingPrice: form.startingPrice === '' ? null : Number(form.startingPrice),
+            latitude: toOptionalNumber(form.latitude),
+            longitude: toOptionalNumber(form.longitude),
+            startingPrice: toOptionalNumber(form.startingPrice),
             gallery: form.gallery,
             coverImage: form.coverImage || null,
             mapMarkerImage: form.mapMarkerImage || null,
+            model3dUrl: form.model3dUrl || null,
+            model3dHeading: toOptionalNumber(form.model3dHeading) ?? 0,
+            model3dScale: toOptionalNumber(form.model3dScale) ?? 1,
             status: form.status,
           });
         }}
@@ -269,7 +343,7 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
         <div className="media-upload">
           <div className="panel-head panel-head--compact">
             <h4>Map building image</h4>
-            <p>This still replaces the project pin on the map. A default 3D-style building is used until you upload one.</p>
+            <p>Optional still used when no GLB is attached. Cesium prefers the 3D model below.</p>
           </div>
           <div className="map-building-upload">
             <img
@@ -301,6 +375,108 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
             </div>
           </div>
         </div>
+
+        <div className="media-upload">
+          <div className="panel-head panel-head--compact">
+            <h4>Project 3D model (Cesium)</h4>
+            <p>
+              Upload a `.glb` (preferred) or `.gltf`. Stored size must be ≤ {formatBytes(MAX_STORED_MODEL_BYTES)}.
+              Files up to 80 MB can be compressed on the server. Oversized CAD exports often fail Cesium fragment shaders.
+            </p>
+          </div>
+
+          <div className="media-upload__controls">
+            <input
+              type="text"
+              placeholder="Paste 3D model URL"
+              value={modelUrl}
+              onChange={(e) => setModelUrl(e.target.value)}
+            />
+            <button
+              type="button"
+              className="ghost"
+              onClick={() => {
+                const nextUrl = modelUrl.trim();
+                if (!nextUrl) {
+                  return;
+                }
+                setForm((current) => ({ ...current, model3dUrl: nextUrl }));
+                setModelUrl('');
+              }}
+            >
+              Add URL
+            </button>
+          </div>
+
+          <div className="split">
+            <input
+              type="number"
+              step="1"
+              placeholder="Heading degrees"
+              value={form.model3dHeading}
+              onChange={(e) => setForm((current) => ({ ...current, model3dHeading: e.target.value }))}
+            />
+            <input
+              type="number"
+              step="0.1"
+              min="0.01"
+              placeholder="Model scale"
+              value={form.model3dScale}
+              onChange={(e) => setForm((current) => ({ ...current, model3dScale: e.target.value }))}
+            />
+          </div>
+
+          {modelUploadState ? <p className="success-text">{modelUploadState}</p> : null}
+          {modelUploadError ? <p className="error-text">{modelUploadError}</p> : null}
+
+          <label className="check-row">
+            <input
+              type="checkbox"
+              checked={optimizeLargeModel}
+              onChange={(event) => setOptimizeLargeModel(event.target.checked)}
+            />
+            <span>Optimize on upload (target ≤ {formatBytes(MAX_STORED_MODEL_BYTES)}, Cesium-safe materials)</span>
+          </label>
+
+          <input
+            type="file"
+            accept=".glb,.gltf,model/gltf-binary,model/gltf+json"
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) {
+                return;
+              }
+              await handleModelUpload(file);
+              e.target.value = '';
+            }}
+          />
+
+          <details className="hint">
+            <summary>How to shrink a ~60 MB GLB</summary>
+            <ul className="bullet-list">
+              {MODEL_OPTIMIZATION_TIPS.map((tip) => (
+                <li key={tip}>{tip}</li>
+              ))}
+            </ul>
+          </details>
+
+          {form.model3dUrl ? (
+            <button type="button" className="ghost" onClick={() => setForm((current) => ({ ...current, model3dUrl: '' }))}>
+              Remove 3D model
+            </button>
+          ) : null}
+
+          <div className="project-admin-editor__viewer">
+            <Project3DViewer
+              src={previewModelUrl}
+              title="Project 3D preview"
+              description="Same asset Cesium places on the public map at the saved coordinates."
+              compact
+            />
+            {!form.model3dUrl ? <p className="empty-inline">No 3D model attached yet.</p> : null}
+          </div>
+        </div>
+
         <input
           type="number"
           placeholder="Starting Price"

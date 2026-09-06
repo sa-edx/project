@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { createLead } from '../api.js';
 import CesiumProjectMap from './CesiumProjectMap.jsx';
 import { getProjectMapImage } from '../mapBuildingMarker.js';
+import { getProjectModelUrl } from '../mediaUrl.js';
 
 function formatMoney(value, currency = 'AED') {
   if (value === null || value === undefined || value === '') {
@@ -233,7 +234,9 @@ function getFacilityMapPoints(project, assignments) {
       latitude: projectLatitude,
       longitude: projectLongitude,
       image: getProjectMapImage(project),
-      modelUrl: typeof project?.model3dUrl === 'string' ? project.model3dUrl.trim() : '',
+      modelUrl: getProjectModelUrl(project),
+      modelHeading: Number(project?.model3dHeading),
+      modelScale: Number(project?.model3dScale),
     });
   }
 

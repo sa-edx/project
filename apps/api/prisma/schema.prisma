@@ -93,6 +93,9 @@ model Project {
   gallery      Json?
   coverImage   String?
   mapMarkerImage String?
+  model3dUrl   String?
+  model3dHeading Float?
+  model3dScale Float?
   status       String   @default("draft")
   slug         String   @unique
   buildings    Building[]

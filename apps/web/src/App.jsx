@@ -46,6 +46,7 @@ import AmenityManagerV2 from './components/AmenityManagerV2.jsx';
 import FacilityManagerV2 from './components/FacilityManagerV2.jsx';
 import CesiumProjectMap from './components/CesiumProjectMap.jsx';
 import { getProjectMapImage } from './mapBuildingMarker.js';
+import { getProjectModelUrl } from './mediaUrl.js';
 import ProjectAdminEditorV2 from './components/ProjectAdminEditorV2.jsx';
 import PublicProjectLearnMoreV2 from './components/PublicProjectLearnMoreV2.jsx';
 import PublicProjectExplorerV2 from './components/PublicProjectExplorerV2.jsx';
@@ -73,7 +74,7 @@ function extractItems(response) {
 }
 
 function joinNonEmpty(values) {
-  return values.filter(Boolean).join(' Â· ');
+  return values.filter(Boolean).join(' · ');
 }
 
 function normalizeList(value) {
@@ -137,7 +138,9 @@ function buildFullscreenMapData(project, building, selectedFacilityIds = []) {
       latitude,
       longitude,
       image: getProjectMapImage(project),
-      modelUrl: typeof project?.model3dUrl === 'string' ? project.model3dUrl.trim() : '',
+      modelUrl: getProjectModelUrl(project),
+      modelHeading: Number(project?.model3dHeading),
+      modelScale: Number(project?.model3dScale),
     };
     points.push(projectPoint);
     focusPoints.push(projectPoint);
@@ -1020,6 +1023,14 @@ export default function App() {
     try {
       await updateProject(token, projectId, payload);
       await refreshAdminData(projectId);
+      const publicResponse = await listPublicProjects().catch(() => null);
+      if (publicResponse) {
+        setPublicProjects(extractItems(publicResponse));
+      }
+      if (selectedPublicProjectId === projectId) {
+        const detail = await getPublicProject(projectId).catch(() => null);
+        setPublicProjectDetail(detail?.data || detail || null);
+      }
       setMessage('Project saved.');
     } catch (requestError) {
       setError(requestError?.message || 'Failed to save project.');
@@ -1724,20 +1735,28 @@ export default function App() {
 
             <form className="panel auth-panel" onSubmit={handleLogin}>
               <h3>Admin login</h3>
-              <input
-                type="email"
-                placeholder="Email"
-                value={loginForm.email}
-                onChange={(e) => setLoginForm((current) => ({ ...current, email: e.target.value }))}
-                required
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                value={loginForm.password}
-                onChange={(e) => setLoginForm((current) => ({ ...current, password: e.target.value }))}
-                required
-              />
+              <label className="field">
+                <span>Email</span>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={loginForm.email}
+                  onChange={(e) => setLoginForm((current) => ({ ...current, email: e.target.value }))}
+                  required
+                  autoComplete="email"
+                />
+              </label>
+              <label className="field">
+                <span>Password</span>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={loginForm.password}
+                  onChange={(e) => setLoginForm((current) => ({ ...current, password: e.target.value }))}
+                  required
+                  autoComplete="current-password"
+                />
+              </label>
               <button type="submit" disabled={busy}>
                 {busy ? 'Signing in...' : 'Sign in'}
               </button>

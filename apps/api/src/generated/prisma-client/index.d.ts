@@ -8376,12 +8376,16 @@ export namespace Prisma {
     latitude: Decimal | null
     longitude: Decimal | null
     startingPrice: Decimal | null
+    model3dHeading: number | null
+    model3dScale: number | null
   }
 
   export type ProjectSumAggregateOutputType = {
     latitude: Decimal | null
     longitude: Decimal | null
     startingPrice: Decimal | null
+    model3dHeading: number | null
+    model3dScale: number | null
   }
 
   export type ProjectMinAggregateOutputType = {
@@ -8398,6 +8402,10 @@ export namespace Prisma {
     longitude: Decimal | null
     startingPrice: Decimal | null
     coverImage: string | null
+    mapMarkerImage: string | null
+    model3dUrl: string | null
+    model3dHeading: number | null
+    model3dScale: number | null
     status: string | null
     slug: string | null
     createdAt: Date | null
@@ -8418,6 +8426,10 @@ export namespace Prisma {
     longitude: Decimal | null
     startingPrice: Decimal | null
     coverImage: string | null
+    mapMarkerImage: string | null
+    model3dUrl: string | null
+    model3dHeading: number | null
+    model3dScale: number | null
     status: string | null
     slug: string | null
     createdAt: Date | null
@@ -8439,6 +8451,10 @@ export namespace Prisma {
     startingPrice: number
     gallery: number
     coverImage: number
+    mapMarkerImage: number
+    model3dUrl: number
+    model3dHeading: number
+    model3dScale: number
     status: number
     slug: number
     createdAt: number
@@ -8451,12 +8467,16 @@ export namespace Prisma {
     latitude?: true
     longitude?: true
     startingPrice?: true
+    model3dHeading?: true
+    model3dScale?: true
   }
 
   export type ProjectSumAggregateInputType = {
     latitude?: true
     longitude?: true
     startingPrice?: true
+    model3dHeading?: true
+    model3dScale?: true
   }
 
   export type ProjectMinAggregateInputType = {
@@ -8473,6 +8493,10 @@ export namespace Prisma {
     longitude?: true
     startingPrice?: true
     coverImage?: true
+    mapMarkerImage?: true
+    model3dUrl?: true
+    model3dHeading?: true
+    model3dScale?: true
     status?: true
     slug?: true
     createdAt?: true
@@ -8493,6 +8517,10 @@ export namespace Prisma {
     longitude?: true
     startingPrice?: true
     coverImage?: true
+    mapMarkerImage?: true
+    model3dUrl?: true
+    model3dHeading?: true
+    model3dScale?: true
     status?: true
     slug?: true
     createdAt?: true
@@ -8514,6 +8542,10 @@ export namespace Prisma {
     startingPrice?: true
     gallery?: true
     coverImage?: true
+    mapMarkerImage?: true
+    model3dUrl?: true
+    model3dHeading?: true
+    model3dScale?: true
     status?: true
     slug?: true
     createdAt?: true
@@ -8622,6 +8654,10 @@ export namespace Prisma {
     startingPrice: Decimal | null
     gallery: JsonValue | null
     coverImage: string | null
+    mapMarkerImage: string | null
+    model3dUrl: string | null
+    model3dHeading: number | null
+    model3dScale: number | null
     status: string
     slug: string
     createdAt: Date
@@ -8662,6 +8698,10 @@ export namespace Prisma {
     startingPrice?: boolean
     gallery?: boolean
     coverImage?: boolean
+    mapMarkerImage?: boolean
+    model3dUrl?: boolean
+    model3dHeading?: boolean
+    model3dScale?: boolean
     status?: boolean
     slug?: boolean
     createdAt?: boolean
@@ -8694,6 +8734,10 @@ export namespace Prisma {
     startingPrice?: boolean
     gallery?: boolean
     coverImage?: boolean
+    mapMarkerImage?: boolean
+    model3dUrl?: boolean
+    model3dHeading?: boolean
+    model3dScale?: boolean
     status?: boolean
     slug?: boolean
     createdAt?: boolean
@@ -8716,6 +8760,10 @@ export namespace Prisma {
     startingPrice?: boolean
     gallery?: boolean
     coverImage?: boolean
+    mapMarkerImage?: boolean
+    model3dUrl?: boolean
+    model3dHeading?: boolean
+    model3dScale?: boolean
     status?: boolean
     slug?: boolean
     createdAt?: boolean
@@ -8738,13 +8786,17 @@ export namespace Prisma {
     startingPrice?: boolean
     gallery?: boolean
     coverImage?: boolean
+    mapMarkerImage?: boolean
+    model3dUrl?: boolean
+    model3dHeading?: boolean
+    model3dScale?: boolean
     status?: boolean
     slug?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "developerId" | "projectCode" | "projectName" | "projectType" | "description" | "country" | "city" | "address" | "latitude" | "longitude" | "startingPrice" | "gallery" | "coverImage" | "status" | "slug" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "developerId" | "projectCode" | "projectName" | "projectType" | "description" | "country" | "city" | "address" | "latitude" | "longitude" | "startingPrice" | "gallery" | "coverImage" | "mapMarkerImage" | "model3dUrl" | "model3dHeading" | "model3dScale" | "status" | "slug" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     developer?: boolean | DeveloperDefaultArgs<ExtArgs>
     buildings?: boolean | Project$buildingsArgs<ExtArgs>
@@ -8794,6 +8846,10 @@ export namespace Prisma {
       startingPrice: Prisma.Decimal | null
       gallery: Prisma.JsonValue | null
       coverImage: string | null
+      mapMarkerImage: string | null
+      model3dUrl: string | null
+      model3dHeading: number | null
+      model3dScale: number | null
       status: string
       slug: string
       createdAt: Date
@@ -9245,6 +9301,10 @@ export namespace Prisma {
     readonly startingPrice: FieldRef<"Project", 'Decimal'>
     readonly gallery: FieldRef<"Project", 'Json'>
     readonly coverImage: FieldRef<"Project", 'String'>
+    readonly mapMarkerImage: FieldRef<"Project", 'String'>
+    readonly model3dUrl: FieldRef<"Project", 'String'>
+    readonly model3dHeading: FieldRef<"Project", 'Float'>
+    readonly model3dScale: FieldRef<"Project", 'Float'>
     readonly status: FieldRef<"Project", 'String'>
     readonly slug: FieldRef<"Project", 'String'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
@@ -23296,6 +23356,10 @@ export namespace Prisma {
     startingPrice: 'startingPrice',
     gallery: 'gallery',
     coverImage: 'coverImage',
+    mapMarkerImage: 'mapMarkerImage',
+    model3dUrl: 'model3dUrl',
+    model3dHeading: 'model3dHeading',
+    model3dScale: 'model3dScale',
     status: 'status',
     slug: 'slug',
     createdAt: 'createdAt',
@@ -23611,20 +23675,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -23635,6 +23685,20 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
   /**
    * Deep Input Types
@@ -24023,6 +24087,10 @@ export namespace Prisma {
     startingPrice?: DecimalNullableFilter<"Project"> | Decimal | DecimalJsLike | number | string | null
     gallery?: JsonNullableFilter<"Project">
     coverImage?: StringNullableFilter<"Project"> | string | null
+    mapMarkerImage?: StringNullableFilter<"Project"> | string | null
+    model3dUrl?: StringNullableFilter<"Project"> | string | null
+    model3dHeading?: FloatNullableFilter<"Project"> | number | null
+    model3dScale?: FloatNullableFilter<"Project"> | number | null
     status?: StringFilter<"Project"> | string
     slug?: StringFilter<"Project"> | string
     createdAt?: DateTimeFilter<"Project"> | Date | string
@@ -24054,6 +24122,10 @@ export namespace Prisma {
     startingPrice?: SortOrderInput | SortOrder
     gallery?: SortOrderInput | SortOrder
     coverImage?: SortOrderInput | SortOrder
+    mapMarkerImage?: SortOrderInput | SortOrder
+    model3dUrl?: SortOrderInput | SortOrder
+    model3dHeading?: SortOrderInput | SortOrder
+    model3dScale?: SortOrderInput | SortOrder
     status?: SortOrder
     slug?: SortOrder
     createdAt?: SortOrder
@@ -24089,6 +24161,10 @@ export namespace Prisma {
     startingPrice?: DecimalNullableFilter<"Project"> | Decimal | DecimalJsLike | number | string | null
     gallery?: JsonNullableFilter<"Project">
     coverImage?: StringNullableFilter<"Project"> | string | null
+    mapMarkerImage?: StringNullableFilter<"Project"> | string | null
+    model3dUrl?: StringNullableFilter<"Project"> | string | null
+    model3dHeading?: FloatNullableFilter<"Project"> | number | null
+    model3dScale?: FloatNullableFilter<"Project"> | number | null
     status?: StringFilter<"Project"> | string
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
@@ -24119,6 +24195,10 @@ export namespace Prisma {
     startingPrice?: SortOrderInput | SortOrder
     gallery?: SortOrderInput | SortOrder
     coverImage?: SortOrderInput | SortOrder
+    mapMarkerImage?: SortOrderInput | SortOrder
+    model3dUrl?: SortOrderInput | SortOrder
+    model3dHeading?: SortOrderInput | SortOrder
+    model3dScale?: SortOrderInput | SortOrder
     status?: SortOrder
     slug?: SortOrder
     createdAt?: SortOrder
@@ -24148,6 +24228,10 @@ export namespace Prisma {
     startingPrice?: DecimalNullableWithAggregatesFilter<"Project"> | Decimal | DecimalJsLike | number | string | null
     gallery?: JsonNullableWithAggregatesFilter<"Project">
     coverImage?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    mapMarkerImage?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    model3dUrl?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    model3dHeading?: FloatNullableWithAggregatesFilter<"Project"> | number | null
+    model3dScale?: FloatNullableWithAggregatesFilter<"Project"> | number | null
     status?: StringWithAggregatesFilter<"Project"> | string
     slug?: StringWithAggregatesFilter<"Project"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
@@ -25625,6 +25709,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -25656,6 +25744,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -25685,6 +25777,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25716,6 +25812,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25746,6 +25846,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -25766,6 +25870,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25787,6 +25895,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27323,6 +27435,17 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type DeveloperScalarRelationFilter = {
     is?: DeveloperWhereInput
     isNot?: DeveloperWhereInput
@@ -27433,6 +27556,10 @@ export namespace Prisma {
     startingPrice?: SortOrder
     gallery?: SortOrder
     coverImage?: SortOrder
+    mapMarkerImage?: SortOrder
+    model3dUrl?: SortOrder
+    model3dHeading?: SortOrder
+    model3dScale?: SortOrder
     status?: SortOrder
     slug?: SortOrder
     createdAt?: SortOrder
@@ -27443,6 +27570,8 @@ export namespace Prisma {
     latitude?: SortOrder
     longitude?: SortOrder
     startingPrice?: SortOrder
+    model3dHeading?: SortOrder
+    model3dScale?: SortOrder
   }
 
   export type ProjectMaxOrderByAggregateInput = {
@@ -27459,6 +27588,10 @@ export namespace Prisma {
     longitude?: SortOrder
     startingPrice?: SortOrder
     coverImage?: SortOrder
+    mapMarkerImage?: SortOrder
+    model3dUrl?: SortOrder
+    model3dHeading?: SortOrder
+    model3dScale?: SortOrder
     status?: SortOrder
     slug?: SortOrder
     createdAt?: SortOrder
@@ -27479,6 +27612,10 @@ export namespace Prisma {
     longitude?: SortOrder
     startingPrice?: SortOrder
     coverImage?: SortOrder
+    mapMarkerImage?: SortOrder
+    model3dUrl?: SortOrder
+    model3dHeading?: SortOrder
+    model3dScale?: SortOrder
     status?: SortOrder
     slug?: SortOrder
     createdAt?: SortOrder
@@ -27489,6 +27626,8 @@ export namespace Prisma {
     latitude?: SortOrder
     longitude?: SortOrder
     startingPrice?: SortOrder
+    model3dHeading?: SortOrder
+    model3dScale?: SortOrder
   }
 
   export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -27531,6 +27670,22 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedJsonNullableFilter<$PrismaModel>
     _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -28664,6 +28819,14 @@ export namespace Prisma {
     divide?: Decimal | DecimalJsLike | number | string
   }
 
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type DeveloperUpdateOneRequiredWithoutProjectsNestedInput = {
     create?: XOR<DeveloperCreateWithoutProjectsInput, DeveloperUncheckedCreateWithoutProjectsInput>
     connectOrCreate?: DeveloperCreateOrConnectWithoutProjectsInput
@@ -29769,6 +29932,17 @@ export namespace Prisma {
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
@@ -29806,6 +29980,22 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -30321,6 +30511,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -30350,6 +30544,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -30442,6 +30640,10 @@ export namespace Prisma {
     startingPrice?: DecimalNullableFilter<"Project"> | Decimal | DecimalJsLike | number | string | null
     gallery?: JsonNullableFilter<"Project">
     coverImage?: StringNullableFilter<"Project"> | string | null
+    mapMarkerImage?: StringNullableFilter<"Project"> | string | null
+    model3dUrl?: StringNullableFilter<"Project"> | string | null
+    model3dHeading?: FloatNullableFilter<"Project"> | number | null
+    model3dScale?: FloatNullableFilter<"Project"> | number | null
     status?: StringFilter<"Project"> | string
     slug?: StringFilter<"Project"> | string
     createdAt?: DateTimeFilter<"Project"> | Date | string
@@ -31227,6 +31429,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -31257,6 +31463,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -31397,6 +31607,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31427,6 +31641,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31487,6 +31705,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -31517,6 +31739,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -31654,6 +31880,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31684,6 +31914,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31767,6 +32001,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -31797,6 +32035,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -32033,6 +32275,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32063,6 +32309,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32215,6 +32465,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -32245,6 +32499,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -32416,6 +32674,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32446,6 +32708,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32618,6 +32884,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -32648,6 +32918,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -32804,6 +33078,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32834,6 +33112,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32974,6 +33256,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -33004,6 +33290,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -33160,6 +33450,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33190,6 +33484,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33279,6 +33577,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -33309,6 +33611,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -33353,6 +33659,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33383,6 +33693,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33461,6 +33775,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -33491,6 +33809,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -33568,6 +33890,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33598,6 +33924,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33709,6 +34039,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -33739,6 +34073,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -33810,6 +34148,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33840,6 +34182,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33991,6 +34337,10 @@ export namespace Prisma {
     startingPrice?: Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: string | null
+    mapMarkerImage?: string | null
+    model3dUrl?: string | null
+    model3dHeading?: number | null
+    model3dScale?: number | null
     status?: string
     slug: string
     createdAt?: Date | string
@@ -34011,6 +34361,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34040,6 +34394,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34069,6 +34427,10 @@ export namespace Prisma {
     startingPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gallery?: NullableJsonNullValueInput | InputJsonValue
     coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    mapMarkerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    model3dHeading?: NullableFloatFieldUpdateOperationsInput | number | null
+    model3dScale?: NullableFloatFieldUpdateOperationsInput | number | null
     status?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as Cesium from 'cesium';
+import { DEFAULT_MAP_BUILDING_IMAGE } from '../mapBuildingMarker.js';
 import { GRAPH_HOPPER_API_KEY, fetchRoadRoute, parseCoordinate, readLatLng } from '../mapRouting.js';
 
 const DEFAULT_CENTER = { latitude: 25.2048, longitude: 55.2708 };
@@ -81,24 +82,46 @@ function createPoiImage() {
   return canvas.toDataURL();
 }
 
-function addProjectBuilding(viewer, Cesium, point) {
+function isGpuShaderError(error) {
+  const message = String(error?.message || error || '');
+  return /shader|fragment shader|vertex shader|failed to compile|GLSL|WEBGL/i.test(message);
+}
+
+function addProjectBuilding(viewer, Cesium, point, { disableModel = false } = {}) {
   const latitude = parseCoordinate(point.latitude);
   const longitude = parseCoordinate(point.longitude);
   if (latitude === null || longitude === null) {
     return;
   }
 
-  if (point.modelUrl) {
+  if (point.modelUrl && !disableModel) {
+    const position = Cesium.Cartesian3.fromDegrees(longitude, latitude, 0);
+    const headingDegrees = Number.isFinite(Number(point.modelHeading)) ? Number(point.modelHeading) : 0;
+    const scale = Number.isFinite(Number(point.modelScale)) && Number(point.modelScale) > 0 ? Number(point.modelScale) : 1;
+    const orientation = Cesium.Transforms.headingPitchRollQuaternion(
+      position,
+      new Cesium.HeadingPitchRoll(Cesium.Math.toRadians(headingDegrees), 0, 0),
+    );
+
     viewer.entities.add({
       id: point.id,
       name: point.label,
-      position: Cesium.Cartesian3.fromDegrees(longitude, latitude, 0),
+      position,
+      orientation,
       model: {
         uri: point.modelUrl,
         heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
-        scale: Number.isFinite(Number(point.modelScale)) ? Number(point.modelScale) : 1,
-        minimumPixelSize: 64,
-        maximumScale: 400,
+        scale,
+        minimumPixelSize: 48,
+        maximumScale: 800,
+        incrementallyLoadTextures: true,
+        runAnimations: false,
+        shadows: Cesium.ShadowMode.DISABLED,
+        silhouetteSize: 0,
+        color: Cesium.Color.WHITE,
+        colorBlendMode: Cesium.ColorBlendMode.HIGHLIGHT,
+        colorBlendAmount: 0,
+        imageBasedLightingFactor: new Cesium.Cartesian2(1.0, 0.2),
       },
       label: {
         text: point.label || '',
@@ -108,9 +131,44 @@ function addProjectBuilding(viewer, Cesium, point) {
         outlineWidth: 4,
         style: Cesium.LabelStyle.FILL_AND_OUTLINE,
         verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-        pixelOffset: new Cesium.Cartesian2(0, -18),
+        pixelOffset: new Cesium.Cartesian2(0, -24),
         disableDepthTestDistance: Number.POSITIVE_INFINITY,
         heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+      },
+    });
+    return;
+  }
+
+  const customImage =
+    typeof point.image === 'string' && point.image.trim() && point.image.trim() !== DEFAULT_MAP_BUILDING_IMAGE
+      ? point.image.trim()
+      : '';
+
+  if (customImage) {
+    viewer.entities.add({
+      id: point.id,
+      name: point.label,
+      position: Cesium.Cartesian3.fromDegrees(longitude, latitude, 0),
+      billboard: {
+        image: customImage,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+        heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        width: 104,
+        height: 128,
+        scaleByDistance: new Cesium.NearFarScalar(150, 1.35, 12000, 0.3),
+      },
+      label: {
+        text: point.label || '',
+        font: '600 14px Segoe UI, sans-serif',
+        fillColor: Cesium.Color.WHITE,
+        outlineColor: Cesium.Color.fromCssColorString('#0b1220'),
+        outlineWidth: 4,
+        style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+        pixelOffset: new Cesium.Cartesian2(0, -136),
+        heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
       },
     });
     return;
@@ -297,13 +355,22 @@ export default function CesiumProjectMap({ points, focusPoints, routes, classNam
   const [centerLabel, setCenterLabel] = useState(`${DEFAULT_CENTER.latitude.toFixed(5)}, ${DEFAULT_CENTER.longitude.toFixed(5)}`);
   const [selectedRouteId, setSelectedRouteId] = useState('');
   const [routeDetails, setRouteDetails] = useState({});
+  const disableModelsRef = useRef(false);
+  const pointsRef = useRef(safePoints);
 
   const focusSignature = useMemo(
     () => safeFocusPoints.map((point) => `${point.id}:${point.latitude},${point.longitude}`).join('|'),
     [safeFocusPoints],
   );
   const pointSignature = useMemo(
-    () => safePoints.map((point) => `${point.id}:${point.kind}:${point.latitude},${point.longitude}:${point.modelUrl || ''}`).join('|'),
+    () =>
+      safePoints
+        .map((point) => {
+          const image = typeof point.image === 'string' ? point.image : '';
+          const imageKey = image ? `${image.length}:${image.slice(0, 24)}:${image.slice(-24)}` : '';
+          return `${point.id}:${point.kind}:${point.latitude},${point.longitude}:${point.modelUrl || ''}:${point.modelHeading || 0}:${point.modelScale || 1}:${imageKey}`;
+        })
+        .join('|'),
     [safePoints],
   );
   const routeSignature = useMemo(
@@ -349,7 +416,16 @@ export default function CesiumProjectMap({ points, focusPoints, routes, classNam
           selectionIndicator: true,
           baseLayer: false,
           terrainProvider: new Cesium.EllipsoidTerrainProvider(),
+          contextOptions: {
+            webgl: {
+              alpha: false,
+              failIfMajorPerformanceCaveat: false,
+            },
+          },
         });
+
+        viewer.scene.highDynamicRange = false;
+        viewer.scene.fog.enabled = false;
 
         if (ION_TOKEN && typeof Cesium.createWorldTerrainAsync === 'function') {
           try {
@@ -359,9 +435,9 @@ export default function CesiumProjectMap({ points, focusPoints, routes, classNam
           }
         }
 
-        viewer.scene.globe.enableLighting = true;
+        viewer.scene.globe.enableLighting = false;
         viewer.scene.globe.depthTestAgainstTerrain = false;
-        viewer.shadows = true;
+        viewer.shadows = false;
         viewer.scene.screenSpaceCameraController.minimumZoomDistance = 40;
         viewer.scene.screenSpaceCameraController.maximumZoomDistance = 2.0e7;
         viewer.imageryLayers.removeAll();
@@ -372,6 +448,32 @@ export default function CesiumProjectMap({ points, focusPoints, routes, classNam
         viewerRef.current = viewer;
         setReady(true);
         setLoadError('');
+
+        viewer.scene.renderError.addEventListener((scene, error) => {
+          if (!isGpuShaderError(error) || disableModelsRef.current) {
+            setLoadError(error?.message || 'The 3D map failed to render.');
+            return;
+          }
+
+          disableModelsRef.current = true;
+          setLoadError(
+            'Fragment shader failed to compile for this GLB. The map marker is shown instead. Re-upload an optimized model (≤ 15 MB, 1024px textures).',
+          );
+
+          try {
+            viewer.entities.removeAll();
+            pointsRef.current.forEach((point) => {
+              if (point.kind === 'project') {
+                addProjectBuilding(viewer, Cesium, point, { disableModel: true });
+                return;
+              }
+              addPoiMarker(viewer, Cesium, point, poiImageRef.current);
+            });
+            scene.requestRender();
+          } catch {
+            // Keep the error banner if fallback also fails.
+          }
+        });
 
         viewer.camera.moveEnd.addEventListener(() => {
           setCenterLabel(formatCameraLabel(viewer, Cesium));
@@ -477,6 +579,10 @@ export default function CesiumProjectMap({ points, focusPoints, routes, classNam
   }, [routeSignature, safeRoutes]);
 
   useEffect(() => {
+    pointsRef.current = safePoints;
+  }, [safePoints]);
+
+  useEffect(() => {
     const viewer = viewerRef.current;
     const Cesium = cesiumRef.current;
     if (!viewer || !Cesium || !ready) {
@@ -487,7 +593,7 @@ export default function CesiumProjectMap({ points, focusPoints, routes, classNam
 
     safePoints.forEach((point) => {
       if (point.kind === 'project') {
-        addProjectBuilding(viewer, Cesium, point);
+        addProjectBuilding(viewer, Cesium, point, { disableModel: disableModelsRef.current });
         return;
       }
 

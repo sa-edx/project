@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Project" ADD COLUMN "model3dHeading" DOUBLE PRECISION;
+ALTER TABLE "Project" ADD COLUMN "model3dScale" DOUBLE PRECISION;
