@@ -369,6 +369,72 @@ model3dRouter.delete(
   },
 );
 
+function parseOptionalNumber(value) {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null || value === '') {
+    return null;
+  }
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : undefined;
+}
+
+model3dRouter.patch(
+  '/projects/:id/placement',
+  authenticateRequest,
+  requireRole(...writeRoles),
+  async (req, res, next) => {
+    try {
+      const project = await getProjectOr404(req, res);
+      if (!project) {
+        return;
+      }
+
+      const latitude = parseOptionalNumber(req.body?.latitude);
+      const longitude = parseOptionalNumber(req.body?.longitude);
+      const model3dHeading = parseOptionalNumber(req.body?.model3dHeading);
+      const model3dScale = parseOptionalNumber(req.body?.model3dScale);
+
+      if (model3dScale !== undefined && model3dScale !== null && model3dScale <= 0) {
+        return res.status(400).json({
+          error: 'VALIDATION_ERROR',
+          message: 'Model scale must be greater than 0.',
+        });
+      }
+
+      const updated = await prisma.project.update({
+        where: { id: project.id },
+        data: {
+          ...(latitude !== undefined ? { latitude: latitude === null ? null : String(latitude) } : {}),
+          ...(longitude !== undefined ? { longitude: longitude === null ? null : String(longitude) } : {}),
+          ...(model3dHeading !== undefined ? { model3dHeading } : {}),
+          ...(model3dScale !== undefined ? { model3dScale } : {}),
+        },
+        select: {
+          id: true,
+          latitude: true,
+          longitude: true,
+          model3dHeading: true,
+          model3dScale: true,
+        },
+      });
+
+      return res.json({
+        data: {
+          id: updated.id,
+          latitude: updated.latitude?.toString?.() ?? null,
+          longitude: updated.longitude?.toString?.() ?? null,
+          model3dHeading: updated.model3dHeading ?? null,
+          model3dScale: updated.model3dScale ?? null,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
 model3dRouter.put(
   '/projects/:id/model-3d',
   authenticateRequest,

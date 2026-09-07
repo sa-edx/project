@@ -424,6 +424,8 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
             </button>
           </div>
 
+          <p className="hint">Uploading a .glb does not save location. Click <strong>Save Project</strong> after you change coordinates, heading, or scale.</p>
+
           <div className="split">
             <input
               type="number"

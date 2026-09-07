@@ -16,15 +16,15 @@ const projectInputSchema = z.object({
   country: z.string().min(1),
   city: z.string().min(1),
   address: z.string().min(1),
-  latitude: z.number().optional().nullable(),
-  longitude: z.number().optional().nullable(),
-  startingPrice: z.number().optional().nullable(),
+  latitude: z.union([z.number(), z.string()]).optional().nullable(),
+  longitude: z.union([z.number(), z.string()]).optional().nullable(),
+  startingPrice: z.union([z.number(), z.string()]).optional().nullable(),
   gallery: z.array(z.string()).optional(),
   coverImage: z.string().optional().nullable(),
   mapMarkerImage: z.string().optional().nullable(),
   model3dUrl: z.string().optional().nullable(),
-  model3dHeading: z.number().optional().nullable(),
-  model3dScale: z.number().positive().optional().nullable(),
+  model3dHeading: z.union([z.number(), z.string()]).optional().nullable(),
+  model3dScale: z.union([z.number(), z.string()]).optional().nullable(),
   status: z.string().optional(),
 });
 
@@ -333,8 +333,12 @@ projectsRouter.put('/:id', authenticateRequest, requireRole('super-administrator
         ...(input.coverImage !== undefined ? { coverImage: input.coverImage } : {}),
         ...(input.mapMarkerImage !== undefined ? { mapMarkerImage: input.mapMarkerImage } : {}),
         ...(input.model3dUrl !== undefined ? { model3dUrl: input.model3dUrl } : {}),
-        ...(input.model3dHeading !== undefined ? { model3dHeading: input.model3dHeading } : {}),
-        ...(input.model3dScale !== undefined ? { model3dScale: input.model3dScale } : {}),
+        ...(input.model3dHeading !== undefined
+          ? { model3dHeading: input.model3dHeading === null || input.model3dHeading === '' ? null : Number(input.model3dHeading) }
+          : {}),
+        ...(input.model3dScale !== undefined
+          ? { model3dScale: input.model3dScale === null || input.model3dScale === '' ? null : Number(input.model3dScale) }
+          : {}),
         ...(input.status ? { status: input.status } : {}),
         ...(input.projectName || input.projectCode
           ? { slug: buildProjectSlug(input.projectName || existing.projectName, input.projectCode || existing.projectCode) }

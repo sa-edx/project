@@ -128,11 +128,33 @@ export async function createProject(token, payload) {
   });
 }
 
+export async function updateProjectPlacement(token, projectId, payload) {
+  return request(`/projects/${projectId}/placement`, {
+    token,
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  });
+}
+
+function isHugeDataUrl(value) {
+  return typeof value === 'string' && value.startsWith('data:') && value.length > 80000;
+}
+
 export async function updateProject(token, projectId, payload) {
+  const body = { ...payload };
+  if (Array.isArray(body.gallery) && body.gallery.some(isHugeDataUrl)) {
+    delete body.gallery;
+  }
+  for (const key of ['coverImage', 'mapMarkerImage']) {
+    if (isHugeDataUrl(body[key])) {
+      delete body[key];
+    }
+  }
+
   return request(`/projects/${projectId}`, {
     token,
     method: 'PUT',
-    body: JSON.stringify(payload),
+    body: JSON.stringify(body),
   });
 }
 

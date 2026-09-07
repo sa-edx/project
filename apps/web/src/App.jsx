@@ -38,6 +38,7 @@ import {
   updateFloor,
   updateNearbyDestination,
   updateProject,
+  updateProjectPlacement,
   updateProjectFacility,
   updateProjectAmenity,
   updateUnit,
@@ -1021,7 +1022,20 @@ export default function App() {
     setBusy(true);
     setError('');
     try {
-      await updateProject(token, projectId, payload);
+      await updateProjectPlacement(token, projectId, {
+        latitude: payload.latitude ?? null,
+        longitude: payload.longitude ?? null,
+        model3dHeading: payload.model3dHeading ?? 0,
+        model3dScale: payload.model3dScale ?? 1,
+      });
+      try {
+        await updateProject(token, projectId, payload);
+      } catch (putError) {
+        await refreshAdminData(projectId);
+        setMessage('Coordinates, heading, and scale were saved. The rest of the form was too large to save (usually the photo gallery).');
+        setError(putError?.message || 'Failed to save the rest of the project.');
+        return;
+      }
       await refreshAdminData(projectId);
       const publicResponse = await listPublicProjects().catch(() => null);
       if (publicResponse) {
