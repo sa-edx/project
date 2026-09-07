@@ -10,6 +10,7 @@ healthRouter.get('/', (req, res) => {
     features: {
       model3dChunkedUpload: true,
       modelChunkSize: 1048576,
+      projectPlacement: true,
     },
   });
 });

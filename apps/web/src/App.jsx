@@ -423,6 +423,7 @@ export default function App() {
   const [message, setMessage] = useState('');
 
   const [publicProjects, setPublicProjects] = useState([]);
+  const [publicProjectsLoading, setPublicProjectsLoading] = useState(true);
   const [publicQuery, setPublicQuery] = useState('');
   const [selectedPublicProjectId, setSelectedPublicProjectId] = useState('');
   const [publicProjectDetail, setPublicProjectDetail] = useState(null);
@@ -518,6 +519,7 @@ export default function App() {
     let active = true;
 
     async function loadPublicProjects() {
+      setPublicProjectsLoading(true);
       try {
         const response = await listPublicProjects();
         if (!active) {
@@ -529,7 +531,12 @@ export default function App() {
         if (!active) {
           return;
         }
+        setPublicProjects([]);
         setError(requestError?.message || 'Failed to load public projects.');
+      } finally {
+        if (active) {
+          setPublicProjectsLoading(false);
+        }
       }
     }
 
@@ -1022,20 +1029,28 @@ export default function App() {
     setBusy(true);
     setError('');
     try {
+      // 1) Always persist map pose in a tiny request (never touch gallery bytes).
       await updateProjectPlacement(token, projectId, {
         latitude: payload.latitude ?? null,
         longitude: payload.longitude ?? null,
         model3dHeading: payload.model3dHeading ?? 0,
         model3dScale: payload.model3dScale ?? 1,
       });
-      try {
-        await updateProject(token, projectId, payload);
-      } catch (putError) {
-        await refreshAdminData(projectId);
-        setMessage('Coordinates, heading, and scale were saved. The rest of the form was too large to save (usually the photo gallery).');
-        setError(putError?.message || 'Failed to save the rest of the project.');
-        return;
-      }
+
+      // 2) Save text/metadata only. Embedded data: images are stripped — already in DB.
+      const { gallery, coverImage, mapMarkerImage, latitude, longitude, model3dHeading, model3dScale, ...meta } = payload;
+      await updateProject(token, projectId, {
+        ...meta,
+        model3dUrl: payload.model3dUrl || null,
+        ...(typeof coverImage === 'string' && coverImage && !coverImage.startsWith('data:') ? { coverImage } : {}),
+        ...(typeof mapMarkerImage === 'string' && mapMarkerImage && !mapMarkerImage.startsWith('data:')
+          ? { mapMarkerImage }
+          : {}),
+        ...(Array.isArray(gallery) && gallery.length && gallery.every((item) => typeof item === 'string' && !item.startsWith('data:'))
+          ? { gallery }
+          : {}),
+      });
+
       await refreshAdminData(projectId);
       const publicResponse = await listPublicProjects().catch(() => null);
       if (publicResponse) {
@@ -1045,7 +1060,7 @@ export default function App() {
         const detail = await getPublicProject(projectId).catch(() => null);
         setPublicProjectDetail(detail?.data || detail || null);
       }
-      setMessage('Project saved.');
+      setMessage('Project saved (coordinates, heading, and scale updated without re-uploading gallery images).');
     } catch (requestError) {
       setError(requestError?.message || 'Failed to save project.');
     } finally {
@@ -1731,7 +1746,7 @@ export default function App() {
             onOpenProjectDetail={handleSelectPublicProject}
             query={publicQuery}
             onQueryChange={setPublicQuery}
-            loading={!publicProjects.length}
+            loading={publicProjectsLoading}
             mode={mode}
             token={token}
             onSwitchMode={setMode}

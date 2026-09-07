@@ -424,7 +424,9 @@ export default function ProjectAdminEditorV2({ project, developers, token, onSav
             </button>
           </div>
 
-          <p className="hint">Uploading a .glb does not save location. Click <strong>Save Project</strong> after you change coordinates, heading, or scale.</p>
+          <p className="hint">
+            Save Project updates text fields plus coordinates / heading / scale. Gallery photos already stored in the database are not re-uploaded (that was hanging production saves).
+          </p>
 
           <div className="split">
             <input

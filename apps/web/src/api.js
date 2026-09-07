@@ -128,33 +128,51 @@ export async function createProject(token, payload) {
   });
 }
 
-export async function updateProjectPlacement(token, projectId, payload) {
-  return request(`/projects/${projectId}/placement`, {
-    token,
-    method: 'PATCH',
-    body: JSON.stringify(payload),
-  });
+function isDataUrl(value) {
+  return typeof value === 'string' && value.startsWith('data:');
 }
 
-function isHugeDataUrl(value) {
-  return typeof value === 'string' && value.startsWith('data:') && value.length > 80000;
-}
-
-export async function updateProject(token, projectId, payload) {
+/** Never resend embedded gallery/cover bytes — that hangs Save on production. */
+export function buildSlimProjectUpdate(payload = {}) {
   const body = { ...payload };
-  if (Array.isArray(body.gallery) && body.gallery.some(isHugeDataUrl)) {
-    delete body.gallery;
+
+  if (Array.isArray(body.gallery)) {
+    const keepers = body.gallery.filter((item) => typeof item === 'string' && item && !isDataUrl(item));
+    if (keepers.length === body.gallery.length) {
+      body.gallery = keepers;
+    } else {
+      delete body.gallery;
+    }
   }
+
   for (const key of ['coverImage', 'mapMarkerImage']) {
-    if (isHugeDataUrl(body[key])) {
+    if (isDataUrl(body[key])) {
       delete body[key];
     }
   }
 
+  return body;
+}
+
+/** Map pose only — small PUT to existing /projects/:id (no new route required). */
+export async function updateProjectPlacement(token, projectId, payload) {
   return request(`/projects/${projectId}`, {
     token,
     method: 'PUT',
-    body: JSON.stringify(body),
+    body: JSON.stringify({
+      latitude: payload.latitude ?? null,
+      longitude: payload.longitude ?? null,
+      model3dHeading: payload.model3dHeading ?? 0,
+      model3dScale: payload.model3dScale ?? 1,
+    }),
+  });
+}
+
+export async function updateProject(token, projectId, payload) {
+  return request(`/projects/${projectId}`, {
+    token,
+    method: 'PUT',
+    body: JSON.stringify(buildSlimProjectUpdate(payload)),
   });
 }
 
