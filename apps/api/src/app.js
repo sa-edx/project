@@ -36,12 +36,13 @@ export function createApp() {
   app.use('/', amenitiesRouter);
   app.use('/leads', leadsRouter);
 
+  app.use(model3dRouter);
+
   app.get('/projects/public', listProjectsHandler);
   app.get('/projects/public/:id', getProjectHandler);
   app.get('/projects', listProjectsHandler);
   app.get('/projects/:id', getProjectHandler);
 
-  app.use('/projects', model3dRouter);
   app.use('/projects', projectsRouter);
   app.use('/', structureRouter);
 

@@ -77,6 +77,16 @@ export async function optimizeProjectModelBuffer(buffer, { forceCompress = false
     );
   }
 
+  const needsCompress = forceCompress || source.length > MAX_STORED_MODEL_BYTES;
+  if (!needsCompress) {
+    return {
+      buffer: source,
+      optimized: false,
+      originalBytes: source.length,
+      storedBytes: source.length,
+    };
+  }
+
   const libraries = await loadOptimizeLibraries();
   if (!libraries) {
     if (source.length > MAX_STORED_MODEL_BYTES) {
@@ -108,9 +118,8 @@ export async function optimizeProjectModelBuffer(buffer, { forceCompress = false
     });
   }
 
-  const needsCompress = forceCompress || source.length > MAX_STORED_MODEL_BYTES;
-  let maxTextureSize = needsCompress ? 1024 : 2048;
-  let quality = needsCompress ? 72 : 85;
+  let maxTextureSize = 1024;
+  let quality = 72;
   let output = source;
 
   for (let attempt = 0; attempt < 5; attempt += 1) {

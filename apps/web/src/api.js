@@ -255,15 +255,40 @@ export async function uploadProjectModel3d(token, projectId, file, { optimize = 
     report(Math.round(((index + 1) / totalChunks) * 90), `Uploaded chunk ${index + 1}/${totalChunks}`);
   }
 
-  report(92, 'Assembling and optimizing model on the server...');
-  const completed = await apiJson(`/projects/${projectId}/model-3d/sessions/${uploadId}/complete`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: '{}',
-  });
+  report(92, 'Assembling model on the server...');
+  const completed = await completeUpload(uploadId, 1);
   window.localStorage.removeItem(resumeKey);
   report(100, 'Upload complete.');
   return completed;
+
+  function isNetworkFailure(error) {
+    const message = String(error?.message || '');
+    return !error?.status && /failed to fetch|networkerror|load failed|fetch failed/i.test(message);
+  }
+
+  async function completeUpload(id, attempt) {
+    try {
+      return await apiJson(`/projects/${projectId}/model-3d/sessions/${id}/complete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{}',
+      });
+    } catch (error) {
+      if (isNetworkFailure(error) && attempt < 3) {
+        report(94, `Server dropped while assembling. Retrying (${attempt + 1}/3)...`);
+        await new Promise((resolve) => setTimeout(resolve, 800 * attempt));
+        return completeUpload(id, attempt + 1);
+      }
+      if (isNetworkFailure(error)) {
+        const wrapped = new Error(
+          'The API closed the connection while assembling the model. Chunks are already on the server — choose the same .glb again to retry. Restart `npm run dev:api` if the API process crashed.',
+        );
+        wrapped.payload = { message: wrapped.message };
+        throw wrapped;
+      }
+      throw error;
+    }
+  }
 }
 
 export async function deleteProject(token, projectId) {

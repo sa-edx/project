@@ -7,5 +7,9 @@ healthRouter.get('/', (req, res) => {
     ok: true,
     service: 'api',
     timestamp: new Date().toISOString(),
+    features: {
+      model3dChunkedUpload: true,
+      modelChunkSize: 1048576,
+    },
   });
 });

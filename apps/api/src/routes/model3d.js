@@ -10,7 +10,6 @@ import {
   MAX_STORED_MODEL_BYTES,
   MAX_UPLOAD_MODEL_BYTES,
 } from '../lib/optimizeProjectModel.js';
-import { serializeProject } from './projects.js';
 
 export const MODEL_CHUNK_SIZE = 1 * 1024 * 1024;
 export const model3dRouter = Router();
@@ -106,7 +105,7 @@ export async function saveProjectGlbBuffer(project, buffer, { optimize = true } 
 
   try {
     const result = await optimizeProjectModelBuffer(storedBuffer, {
-      forceCompress: optimize || buffer.length > MAX_STORED_MODEL_BYTES,
+      forceCompress: optimize && buffer.length > MAX_STORED_MODEL_BYTES,
     });
     storedBuffer = result.buffer;
     optimizeMeta = {
@@ -131,19 +130,22 @@ export async function saveProjectGlbBuffer(project, buffer, { optimize = true } 
     data: {
       model3dUrl: `/uploads/project-models/${fileName}`,
     },
-    include: {
-      developer: true,
+    select: {
+      id: true,
+      model3dUrl: true,
+      model3dHeading: true,
+      model3dScale: true,
     },
   });
 
   return {
-    data: serializeProject(updated),
+    data: updated,
     meta: optimizeMeta,
   };
 }
 
 model3dRouter.post(
-  '/:id/model-3d/sessions',
+  '/projects/:id/model-3d/sessions',
   authenticateRequest,
   requireRole(...writeRoles),
   async (req, res, next) => {
@@ -202,7 +204,7 @@ model3dRouter.post(
 );
 
 model3dRouter.get(
-  '/:id/model-3d/sessions/:uploadId',
+  '/projects/:id/model-3d/sessions/:uploadId',
   authenticateRequest,
   requireRole(...writeRoles),
   async (req, res, next) => {
@@ -227,7 +229,7 @@ model3dRouter.get(
 );
 
 model3dRouter.put(
-  '/:id/model-3d/sessions/:uploadId/chunks/:index',
+  '/projects/:id/model-3d/sessions/:uploadId/chunks/:index',
   authenticateRequest,
   requireRole(...writeRoles),
   express.raw({
@@ -287,11 +289,14 @@ model3dRouter.put(
 );
 
 model3dRouter.post(
-  '/:id/model-3d/sessions/:uploadId/complete',
+  '/projects/:id/model-3d/sessions/:uploadId/complete',
   authenticateRequest,
   requireRole(...writeRoles),
   async (req, res, next) => {
     try {
+      req.setTimeout(15 * 60 * 1000);
+      res.setTimeout(15 * 60 * 1000);
+
       const project = await getProjectOr404(req, res);
       if (!project) {
         return;
@@ -331,8 +336,9 @@ model3dRouter.post(
       }
 
       const saved = await saveProjectGlbBuffer(project, assembled, { optimize: session.meta.optimize !== false });
-      await fs.rm(session.sessionDir, { recursive: true, force: true });
-      return res.json(saved);
+      res.json(saved);
+      fs.rm(session.sessionDir, { recursive: true, force: true }).catch(() => {});
+      return;
     } catch (error) {
       if (error.status) {
         return res.status(error.status).json({
@@ -346,7 +352,7 @@ model3dRouter.post(
 );
 
 model3dRouter.delete(
-  '/:id/model-3d/sessions/:uploadId',
+  '/projects/:id/model-3d/sessions/:uploadId',
   authenticateRequest,
   requireRole(...writeRoles),
   async (req, res, next) => {
@@ -364,7 +370,7 @@ model3dRouter.delete(
 );
 
 model3dRouter.put(
-  '/:id/model-3d',
+  '/projects/:id/model-3d',
   authenticateRequest,
   requireRole(...writeRoles),
   express.raw({
