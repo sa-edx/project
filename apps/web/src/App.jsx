@@ -219,122 +219,143 @@ function PublicFullscreenSidebar({
     onToggleSection?.(section, openSection === section ? false : true);
   };
 
+  const handleBackToMenu = () => {
+    if (openSection) {
+      onToggleSection?.(openSection, false);
+    }
+  };
+
+  const sectionTitle =
+    openSection === 'amenities' ? 'Amenities' : openSection === 'poi' ? 'Points of Interest' : openSection === 'floor' ? 'Floors' : '';
+
   return (
     <aside className={`public-fullscreen-map-page__sidebar panel ${isOpen ? 'is-open' : 'is-closed'}`}>
       <div className="public-fullscreen-map-page__sidebar-head">
         <div className="panel-head panel-head--compact">
-          <p className="eyebrow">Project view</p>
-          <h3>{project?.projectName || 'Selected project'}</h3>
-          <p>{joinNonEmpty([project?.projectCode, project?.projectType, project?.city])}</p>
+          <p className="eyebrow">{openSection ? 'Menu' : 'Project view'}</p>
+          <h3>{openSection ? sectionTitle : project?.projectName || 'Selected project'}</h3>
+          <p>{openSection ? 'Choose an option, or go back to the main menu.' : joinNonEmpty([project?.projectCode, project?.projectType, project?.city])}</p>
         </div>
         <button type="button" className="public-fullscreen-map-page__drawer-close" onClick={onClose} aria-label="Close panel">
           ×
         </button>
       </div>
 
-      <div className="public-sidebar__section">
-        <h4>Building</h4>
-        <select value={building?.id || ''} onChange={(event) => onSelectBuilding(event.target.value)} disabled={!buildings.length}>
-          <option value="">{buildings.length ? 'Select building' : 'No buildings available'}</option>
-          {buildings.map((entry) => (
-            <option key={entry.id} value={entry.id}>
-              {joinNonEmpty([entry.buildingCode, entry.buildingName]) || entry.buildingName}
-            </option>
-          ))}
-        </select>
-        <div className="public-sidebar__stats">
-          <span className="tag">{buildings.length} buildings</span>
-          <span className="tag">{floors.length} floors</span>
-        </div>
-        <button type="button" className="ghost public-sidebar__primary-action" onClick={() => onOpenProjectDetail?.(project?.id)}>
-          Floors/Gallery
+      {openSection ? (
+        <button type="button" className="ghost public-sidebar__back" onClick={handleBackToMenu}>
+          ← Back to menu
         </button>
-      </div>
+      ) : null}
 
-      <div className="public-sidebar__section">
-        <button type="button" className="ghost public-sidebar__primary-action" onClick={() => handleSectionHeaderClick('amenities')}>
-          Amenities
-        </button>
-        {openSection === 'amenities' ? (
-          <div className="public-sidebar__section-body">
-            <p className="hint">Choose an amenity to preview its image on the map.</p>
-            <div className="public-sidebar__list">
-              <select value={selectedAmenityId || ''} onChange={(event) => onSelectAmenity(event.target.value)} disabled={!amenities.length}>
-                <option value="">{amenities.length ? 'Select amenity' : 'No amenities available'}</option>
-                {amenities.map((assignment) => (
-                  <option key={assignment.id} value={assignment.id}>
-                    {assignment.amenity?.name}
-                  </option>
-                ))}
-              </select>
-              <div className="public-amenity-picker__list">
-                {selectedAmenity ? (
-                  <article className="public-mini-card">
-                    {selectedAmenity.amenity?.image ? (
-                      <img
-                        className="public-amenity-picker__thumb public-amenity-picker__thumb--large"
-                        src={selectedAmenity.amenity.image}
-                        alt={selectedAmenity.amenity?.name || 'Amenity'}
-                      />
-                    ) : (
-                      <div className="public-amenity-picker__thumb public-amenity-picker__thumb--empty">No image</div>
-                    )}
-                    <strong>{selectedAmenity.amenity?.name}</strong>
-                    <small>{joinNonEmpty([selectedAmenity.amenity?.category, selectedAmenity.notes])}</small>
-                  </article>
-                ) : (
-                  <div className="empty-inline">No amenity selected.</div>
-                )}
-              </div>
+      {!openSection ? (
+        <>
+          <div className="public-sidebar__section">
+            <h4>Building</h4>
+            <select value={building?.id || ''} onChange={(event) => onSelectBuilding(event.target.value)} disabled={!buildings.length}>
+              <option value="">{buildings.length ? 'Select building' : 'No buildings available'}</option>
+              {buildings.map((entry) => (
+                <option key={entry.id} value={entry.id}>
+                  {joinNonEmpty([entry.buildingCode, entry.buildingName]) || entry.buildingName}
+                </option>
+              ))}
+            </select>
+            <div className="public-sidebar__stats">
+              <span className="tag">{buildings.length} buildings</span>
+              <span className="tag">{floors.length} floors</span>
             </div>
+            <button type="button" className="ghost public-sidebar__primary-action" onClick={() => onOpenProjectDetail?.(project?.id)}>
+              Floors/Gallery
+            </button>
           </div>
-        ) : null}
-      </div>
 
-      <div className="public-sidebar__section">
-        <button type="button" className="ghost public-sidebar__primary-action" onClick={() => handleSectionHeaderClick('poi')}>
-          Points of Interest
-        </button>
-        {openSection === 'poi' ? (
-          <div className="public-sidebar__section-body">
-            <p className="hint">Select one or more nearby places to show them on the map.</p>
-            <div className="public-facility-picker__list">
-              {project?.projectFacilities?.length ? (
-                project.projectFacilities.map((assignment) => (
-                  <label key={assignment.id} className="public-facility-picker__item">
-                    <input
-                      type="checkbox"
-                      checked={selectedFacilityIds.includes(assignment.id)}
-                      onChange={() => onToggleFacility(assignment.id)}
+          <div className="public-sidebar__section">
+            <button type="button" className="ghost public-sidebar__primary-action" onClick={() => handleSectionHeaderClick('amenities')}>
+              Amenities
+            </button>
+          </div>
+
+          <div className="public-sidebar__section">
+            <button type="button" className="ghost public-sidebar__primary-action" onClick={() => handleSectionHeaderClick('poi')}>
+              Points of Interest
+            </button>
+          </div>
+        </>
+      ) : null}
+
+      {openSection === 'amenities' ? (
+        <div className="public-sidebar__section public-sidebar__section-body">
+          <p className="hint">Choose an amenity to preview its image on the map.</p>
+          <div className="public-sidebar__list">
+            <select value={selectedAmenityId || ''} onChange={(event) => onSelectAmenity(event.target.value)} disabled={!amenities.length}>
+              <option value="">{amenities.length ? 'Select amenity' : 'No amenities available'}</option>
+              {amenities.map((assignment) => (
+                <option key={assignment.id} value={assignment.id}>
+                  {assignment.amenity?.name}
+                </option>
+              ))}
+            </select>
+            <div className="public-amenity-picker__list">
+              {selectedAmenity ? (
+                <article className="public-mini-card">
+                  {selectedAmenity.amenity?.image ? (
+                    <img
+                      className="public-amenity-picker__thumb public-amenity-picker__thumb--large"
+                      src={selectedAmenity.amenity.image}
+                      alt={selectedAmenity.amenity?.name || 'Amenity'}
                     />
-                    <span>
-                      <strong>{assignment.facility?.name}</strong>
-                      <small>{joinNonEmpty([assignment.facility?.category, assignment.mode])}</small>
-                    </span>
-                  </label>
-                ))
+                  ) : (
+                    <div className="public-amenity-picker__thumb public-amenity-picker__thumb--empty">No image</div>
+                  )}
+                  <strong>{selectedAmenity.amenity?.name}</strong>
+                  <small>{joinNonEmpty([selectedAmenity.amenity?.category, selectedAmenity.notes])}</small>
+                </article>
               ) : (
-                <div className="empty-inline">No points of interest assigned yet.</div>
+                <div className="empty-inline">No amenity selected.</div>
               )}
             </div>
-            {selectedFacilities.length ? (
-              <div className="public-sidebar__list">
-                {selectedFacilities.map((assignment) => (
-                  <article className="public-mini-card" key={`selected-${assignment.id}`}>
+          </div>
+        </div>
+      ) : null}
+
+      {openSection === 'poi' ? (
+        <div className="public-sidebar__section public-sidebar__section-body">
+          <p className="hint">Select one or more nearby places to show them on the map.</p>
+          <div className="public-facility-picker__list">
+            {project?.projectFacilities?.length ? (
+              project.projectFacilities.map((assignment) => (
+                <label key={assignment.id} className="public-facility-picker__item">
+                  <input
+                    type="checkbox"
+                    checked={selectedFacilityIds.includes(assignment.id)}
+                    onChange={() => onToggleFacility(assignment.id)}
+                  />
+                  <span>
                     <strong>{assignment.facility?.name}</strong>
-                    <p>{joinNonEmpty([assignment.facility?.category, assignment.mode])}</p>
-                    <small>
-                      {assignment.distanceKm} km | {assignment.travelMinutes} min
-                    </small>
-                  </article>
-                ))}
-              </div>
+                    <small>{joinNonEmpty([assignment.facility?.category, assignment.mode])}</small>
+                  </span>
+                </label>
+              ))
             ) : (
-              <div className="empty-inline">Select points of interest to show their route cards.</div>
+              <div className="empty-inline">No points of interest assigned yet.</div>
             )}
           </div>
-        ) : null}
-      </div>
+          {selectedFacilities.length ? (
+            <div className="public-sidebar__list">
+              {selectedFacilities.map((assignment) => (
+                <article className="public-mini-card" key={`selected-${assignment.id}`}>
+                  <strong>{assignment.facility?.name}</strong>
+                  <p>{joinNonEmpty([assignment.facility?.category, assignment.mode])}</p>
+                  <small>
+                    {assignment.distanceKm} km | {assignment.travelMinutes} min
+                  </small>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-inline">Select points of interest to show their route cards.</div>
+          )}
+        </div>
+      ) : null}
     </aside>
   );
 }
@@ -862,6 +883,14 @@ export default function App() {
     setMode('public');
   }
 
+  function handleBackToPublicMap() {
+    setPublicView('project');
+    setPublicFullscreenDrawerOpen(true);
+    setPublicFullscreenOpenSection('');
+    setPublicFloorPlanOverlay(null);
+    setPublicAmenityOverlay(null);
+  }
+
   function handleReturnHome() {
     publicProjectSelectionRef.current = false;
     setPublicView('home');
@@ -975,7 +1004,13 @@ export default function App() {
   }
 
   function handleTogglePublicFullscreenDrawer() {
-    setPublicFullscreenDrawerOpen((current) => !current);
+    setPublicFullscreenDrawerOpen((current) => {
+      const next = !current;
+      if (!next) {
+        setPublicFullscreenOpenSection('');
+      }
+      return next;
+    });
   }
 
   async function handleCreateDeveloper(payload) {
@@ -1615,7 +1650,10 @@ export default function App() {
           openSection={publicFullscreenOpenSection}
           onToggleSection={handlePublicFullscreenSectionToggle}
           isOpen={publicFullscreenDrawerOpen}
-          onClose={() => setPublicFullscreenDrawerOpen(false)}
+          onClose={() => {
+            setPublicFullscreenDrawerOpen(false);
+            setPublicFullscreenOpenSection('');
+          }}
         />
         <div className="public-fullscreen-map-page__map">
           <CesiumProjectMap
@@ -1731,7 +1769,7 @@ export default function App() {
   }
 
   if (mode === 'public' && publicView === 'detail') {
-    return <PublicProjectLearnMoreV2 project={selectedPublicProject} onHome={handleReturnHome} />;
+    return <PublicProjectLearnMoreV2 project={selectedPublicProject} onHome={handleReturnHome} onBack={handleBackToPublicMap} />;
   }
 
   return (

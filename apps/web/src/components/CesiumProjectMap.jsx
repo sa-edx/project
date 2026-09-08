@@ -7,34 +7,55 @@ const DEFAULT_CENTER = { latitude: 25.2048, longitude: 55.2708 };
 const DEFAULT_MAP_STYLE = 'satellite';
 const ION_TOKEN = (import.meta.env.VITE_CESIUM_ION_TOKEN || '').trim();
 
-function MapControls({ zoomIn, zoomOut, centerLabel, mapStyle, onSetMapStyle }) {
+function MapControls({ zoomIn, zoomOut, centerLabel, mapStyle, onSetMapStyle, showCameraBar, onOrbitLeft, onOrbitRight, onOrbitUp, onOrbitDown }) {
   return (
-    <div className="map-controls map-controls--3d" onPointerDown={(event) => event.stopPropagation()}>
-      <button type="button" onClick={zoomIn} aria-label="Zoom in">
-        +
-      </button>
-      <button type="button" onClick={zoomOut} aria-label="Zoom out">
-        -
-      </button>
-      <div className="map-controls__segmented" role="group" aria-label="Map style">
-        <button
-          type="button"
-          className={`map-controls__segment ${mapStyle === 'satellite' ? 'map-controls__segment--active' : ''}`}
-          onClick={() => onSetMapStyle('satellite')}
-          aria-pressed={mapStyle === 'satellite'}
-        >
-          Satellite
+    <div className="map-controls-stack" onPointerDown={(event) => event.stopPropagation()}>
+      <div className="map-controls map-controls--3d">
+        <button type="button" onClick={zoomIn} aria-label="Zoom in">
+          +
         </button>
-        <button
-          type="button"
-          className={`map-controls__segment ${mapStyle === 'map' ? 'map-controls__segment--active' : ''}`}
-          onClick={() => onSetMapStyle('map')}
-          aria-pressed={mapStyle === 'map'}
-        >
-          Map
+        <button type="button" onClick={zoomOut} aria-label="Zoom out">
+          -
         </button>
+        <div className="map-controls__segmented" role="group" aria-label="Map style">
+          <button
+            type="button"
+            className={`map-controls__segment ${mapStyle === 'satellite' ? 'map-controls__segment--active' : ''}`}
+            onClick={() => onSetMapStyle('satellite')}
+            aria-pressed={mapStyle === 'satellite'}
+          >
+            Satellite
+          </button>
+          <button
+            type="button"
+            className={`map-controls__segment ${mapStyle === 'map' ? 'map-controls__segment--active' : ''}`}
+            onClick={() => onSetMapStyle('map')}
+            aria-pressed={mapStyle === 'map'}
+          >
+            Map
+          </button>
+        </div>
       </div>
-      <span>{centerLabel}</span>
+      {showCameraBar ? (
+        <div className="map-controls map-controls--camera" aria-live="polite">
+          <strong>3D</strong>
+          <div className="map-controls__orbit" role="group" aria-label="Orbit building">
+            <button type="button" onClick={onOrbitLeft} aria-label="Orbit left">
+              ←
+            </button>
+            <button type="button" onClick={onOrbitUp} aria-label="Tilt up">
+              ↑
+            </button>
+            <button type="button" onClick={onOrbitDown} aria-label="Tilt down">
+              ↓
+            </button>
+            <button type="button" onClick={onOrbitRight} aria-label="Orbit right">
+              →
+            </button>
+          </div>
+          <span>{centerLabel}</span>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -106,6 +127,7 @@ function addProjectBuilding(viewer, Cesium, point, { disableModel = false } = {}
     viewer.entities.add({
       id: point.id,
       name: point.label,
+      description: 'Click to enter 3D inspect mode and orbit this building.',
       position,
       orientation,
       model: {
@@ -286,6 +308,78 @@ function addRouteEntity(viewer, Cesium, route, details, isSelected) {
   };
 }
 
+function getInspectTarget(point, Cesium) {
+  const latitude = parseCoordinate(point.latitude);
+  const longitude = parseCoordinate(point.longitude);
+  if (latitude === null || longitude === null) {
+    return null;
+  }
+
+  const hasModel = Boolean(point.modelUrl);
+  return {
+    center: Cesium.Cartesian3.fromDegrees(longitude, latitude, hasModel ? 35 : 18),
+    range: hasModel ? 420 : 320,
+    heading: Cesium.Math.toRadians(35),
+    pitch: Cesium.Math.toRadians(-28),
+  };
+}
+
+function enterInspectCamera(viewer, Cesium, point) {
+  const target = getInspectTarget(point, Cesium);
+  if (!target) {
+    return;
+  }
+
+  const controller = viewer.scene.screenSpaceCameraController;
+  controller.enableInputs = true;
+  controller.enableRotate = true;
+  controller.enableZoom = true;
+  controller.enableTilt = true;
+  controller.enableLook = false;
+  controller.enableTranslate = false;
+  controller.minimumZoomDistance = 12;
+  controller.maximumZoomDistance = 2500;
+
+  const transform = Cesium.Transforms.eastNorthUpToFixedFrame(target.center);
+  viewer.camera.lookAtTransform(
+    transform,
+    new Cesium.HeadingPitchRange(target.heading, target.pitch, target.range),
+  );
+}
+
+function exitInspectCamera(viewer, Cesium) {
+  if (!viewer || viewer.isDestroyed()) {
+    return;
+  }
+
+  const controller = viewer.scene.screenSpaceCameraController;
+  controller.enableInputs = true;
+  controller.enableRotate = true;
+  controller.enableZoom = true;
+  controller.enableTilt = true;
+  controller.enableLook = true;
+  controller.enableTranslate = true;
+  controller.minimumZoomDistance = 40;
+  controller.maximumZoomDistance = 2.0e7;
+  // Unlock lookAt so free map pan works again.
+  viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY);
+}
+
+function resolvePickedProjectPoint(picked, points, Cesium) {
+  if (!Cesium.defined(picked)) {
+    return null;
+  }
+
+  const entity = picked.id;
+  if (!entity || entity.polyline) {
+    return null;
+  }
+
+  const entityId = String(entity.id || '');
+  const projectId = entityId.replace(/-(podium|tower|cap)$/, '');
+  return points.find((point) => point.kind === 'project' && (point.id === entityId || point.id === projectId)) || null;
+}
+
 function flyToPoints(viewer, Cesium, points) {
   const coordinates = points
     .map((point) => {
@@ -294,31 +388,28 @@ function flyToPoints(viewer, Cesium, points) {
       if (latitude === null || longitude === null) {
         return null;
       }
-      return { latitude, longitude };
+      return { latitude, longitude, hasModel: Boolean(point.modelUrl) };
     })
     .filter(Boolean);
 
   if (!coordinates.length) {
-    viewer.camera.flyTo({
-      destination: Cesium.Cartesian3.fromDegrees(DEFAULT_CENTER.longitude, DEFAULT_CENTER.latitude, 1200),
-      orientation: {
-        heading: Cesium.Math.toRadians(20),
-        pitch: Cesium.Math.toRadians(-38),
-        roll: 0,
-      },
+    const fallback = Cesium.Cartesian3.fromDegrees(DEFAULT_CENTER.longitude, DEFAULT_CENTER.latitude, 20);
+    viewer.camera.flyToBoundingSphere(new Cesium.BoundingSphere(fallback, 80), {
+      offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(25), Cesium.Math.toRadians(-35), 900),
       duration: 0.8,
     });
     return;
   }
 
   if (coordinates.length === 1) {
-    viewer.camera.flyTo({
-      destination: Cesium.Cartesian3.fromDegrees(coordinates[0].longitude, coordinates[0].latitude, 650),
-      orientation: {
-        heading: Cesium.Math.toRadians(22),
-        pitch: Cesium.Math.toRadians(-38),
-        roll: 0,
-      },
+    const point = coordinates[0];
+    // lookAt-style framing keeps the project in the screen center (flyTo+pitch alone pushes it off the bottom).
+    const targetHeight = point.hasModel ? 40 : 20;
+    const radius = point.hasModel ? 140 : 90;
+    const range = point.hasModel ? 620 : 480;
+    const target = Cesium.Cartesian3.fromDegrees(point.longitude, point.latitude, targetHeight);
+    viewer.camera.flyToBoundingSphere(new Cesium.BoundingSphere(target, radius), {
+      offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(28), Cesium.Math.toRadians(-34), range),
       duration: 1.1,
     });
     return;
@@ -327,7 +418,11 @@ function flyToPoints(viewer, Cesium, points) {
   const cartesians = coordinates.map((point) => Cesium.Cartesian3.fromDegrees(point.longitude, point.latitude, 40));
   const sphere = Cesium.BoundingSphere.fromPoints(cartesians);
   viewer.camera.flyToBoundingSphere(sphere, {
-    offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(22), Cesium.Math.toRadians(-42), Math.max(sphere.radius * 4.5, 500)),
+    offset: new Cesium.HeadingPitchRange(
+      Cesium.Math.toRadians(25),
+      Cesium.Math.toRadians(-38),
+      Math.max(sphere.radius * 4.2, 650),
+    ),
     duration: 1.1,
   });
 }
@@ -355,8 +450,10 @@ export default function CesiumProjectMap({ points, focusPoints, routes, classNam
   const [centerLabel, setCenterLabel] = useState(`${DEFAULT_CENTER.latitude.toFixed(5)}, ${DEFAULT_CENTER.longitude.toFixed(5)}`);
   const [selectedRouteId, setSelectedRouteId] = useState('');
   const [routeDetails, setRouteDetails] = useState({});
+  const [inspecting, setInspecting] = useState(false);
   const disableModelsRef = useRef(false);
   const pointsRef = useRef(safePoints);
+  const inspectingRef = useRef(false);
 
   const focusSignature = useMemo(
     () => safeFocusPoints.map((point) => `${point.id}:${point.latitude},${point.longitude}`).join('|'),
@@ -412,7 +509,7 @@ export default function CesiumProjectMap({ points, focusPoints, routes, classNam
           baseLayerPicker: false,
           navigationHelpButton: false,
           fullscreenButton: false,
-          infoBox: true,
+          infoBox: false,
           selectionIndicator: true,
           baseLayer: false,
           terrainProvider: new Cesium.EllipsoidTerrainProvider(),
@@ -481,10 +578,29 @@ export default function CesiumProjectMap({ points, focusPoints, routes, classNam
 
         const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
         handler.setInputAction((movement) => {
-          const picked = viewer.scene.pick(movement.position);
+          const picked =
+            viewer.scene.pick(movement.position)
+            || (viewer.scene.drillPick(movement.position, 5) || []).find((item) => item?.id && !item.id.polyline);
           const entity = picked?.id;
           if (entity?.polyline) {
             setSelectedRouteId(entity.id);
+            return;
+          }
+
+          const projectPoint = resolvePickedProjectPoint(picked, pointsRef.current, Cesium);
+          if (projectPoint) {
+            inspectingRef.current = true;
+            setInspecting(true);
+            enterInspectCamera(viewer, Cesium, projectPoint);
+            setCenterLabel(formatCameraLabel(viewer, Cesium));
+            return;
+          }
+
+          if (inspectingRef.current) {
+            inspectingRef.current = false;
+            setInspecting(false);
+            exitInspectCamera(viewer, Cesium);
+            setCenterLabel(formatCameraLabel(viewer, Cesium));
           }
         }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
         viewer._portalClickHandler = handler;
@@ -613,12 +729,29 @@ export default function CesiumProjectMap({ points, focusPoints, routes, classNam
     }
 
     flyToPoints(viewer, Cesium, safeFocusPoints);
+    if (inspectingRef.current) {
+      exitInspectCamera(viewer, Cesium);
+    }
+    inspectingRef.current = false;
+    setInspecting(false);
     setCenterLabel(formatCameraLabel(viewer, Cesium));
   }, [focusSignature, ready]);
 
   function zoomBy(direction) {
     const viewer = viewerRef.current;
-    if (!viewer) {
+    const Cesium = cesiumRef.current;
+    if (!viewer || !Cesium) {
+      return;
+    }
+
+    if (inspectingRef.current) {
+      const move = Math.max(viewer.camera.positionCartographic.height * 0.2, 25);
+      if (direction > 0) {
+        viewer.camera.moveForward(move);
+      } else {
+        viewer.camera.moveBackward(move);
+      }
+      setCenterLabel(formatCameraLabel(viewer, Cesium));
       return;
     }
 
@@ -628,6 +761,22 @@ export default function CesiumProjectMap({ points, focusPoints, routes, classNam
     } else {
       viewer.camera.zoomOut(amount);
     }
+  }
+
+  function orbitBy(headingDelta = 0, pitchDelta = 0) {
+    const viewer = viewerRef.current;
+    const Cesium = cesiumRef.current;
+    if (!viewer || !Cesium || !inspectingRef.current) {
+      return;
+    }
+
+    if (headingDelta) {
+      viewer.camera.rotateRight(headingDelta);
+    }
+    if (pitchDelta) {
+      viewer.camera.rotateUp(pitchDelta);
+    }
+    setCenterLabel(formatCameraLabel(viewer, Cesium));
   }
 
   const selectedRoute =
@@ -643,13 +792,22 @@ export default function CesiumProjectMap({ points, focusPoints, routes, classNam
         aria-label="Interactive 3D map"
       />
       {loadError ? <div className="location-map__cesium-error">{loadError}</div> : null}
-      <p className="location-map__cesium-hint">Drag to pan · Right-drag to tilt · Scroll to zoom</p>
+      <p className={`location-map__cesium-hint ${inspecting ? 'location-map__cesium-hint--inspect' : ''}`}>
+        {inspecting
+          ? '3D mode · Drag to orbit the building · Right-drag to tilt · Scroll to zoom · Click empty map to exit'
+          : 'Click the 3D building to enter 3D mode · Drag to pan · Scroll to zoom'}
+      </p>
       <MapControls
         zoomIn={() => zoomBy(1)}
         zoomOut={() => zoomBy(-1)}
         centerLabel={centerLabel}
         mapStyle={mapStyle}
         onSetMapStyle={setMapStyle}
+        showCameraBar={inspecting}
+        onOrbitLeft={() => orbitBy(-0.18, 0)}
+        onOrbitRight={() => orbitBy(0.18, 0)}
+        onOrbitUp={() => orbitBy(0, 0.12)}
+        onOrbitDown={() => orbitBy(0, -0.12)}
       />
       {selectedRoute ? (
         <div className="location-map__route-info location-map__route-info--3d">

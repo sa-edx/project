@@ -103,7 +103,7 @@ function PublicActionBar({ project }) {
   );
 }
 
-export default function PublicProjectLearnMoreV2({ project, onHome }) {
+export default function PublicProjectLearnMoreV2({ project, onHome, onBack }) {
   const buildings = useMemo(() => collectBuildings(project), [project]);
   const [selectedBuildingId, setSelectedBuildingId] = useState('');
   const [selectedFloorId, setSelectedFloorId] = useState('');
@@ -202,9 +202,16 @@ export default function PublicProjectLearnMoreV2({ project, onHome }) {
   if (!project) {
     return (
       <div className="public-learnmore-page">
-        <button type="button" className="public-learnmore-page__home" onClick={onHome}>
-          Home
-        </button>
+        <div className="public-learnmore-page__nav">
+          {onBack ? (
+            <button type="button" className="public-learnmore-page__back" onClick={onBack}>
+              ← Map menu
+            </button>
+          ) : null}
+          <button type="button" className="public-learnmore-page__home" onClick={onHome}>
+            Home
+          </button>
+        </div>
         <div className="panel public-learnmore-page__loading">
           <h3>Loading project</h3>
           <p>Please wait while the project detail view is prepared.</p>
@@ -215,9 +222,16 @@ export default function PublicProjectLearnMoreV2({ project, onHome }) {
 
   return (
     <div className="public-learnmore-page">
-      <button type="button" className="public-learnmore-page__home" onClick={onHome}>
-        Home
-      </button>
+      <div className="public-learnmore-page__nav">
+        {onBack ? (
+          <button type="button" className="public-learnmore-page__back" onClick={onBack}>
+            ← Map menu
+          </button>
+        ) : null}
+        <button type="button" className="public-learnmore-page__home" onClick={onHome}>
+          Home
+        </button>
+      </div>
 
       <header className="public-learnmore-page__header panel">
         <div>
