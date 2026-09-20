@@ -1,0 +1,169 @@
+{
+    "default": {
+        "firstScene": "livingroom",
+        "author": "SaeedAhmed",
+        "sceneFadeDuration": 1000,
+        "hfov": 100,
+        "minHfov": 50,
+        "maxHfov": 120
+    },
+    "scenes": {
+        "livingroom": {
+            "title": "Living Room",
+            "type": "equirectangular",
+            "panorama": "city/living_room-view_360_equirectangular_4096x2048.png",
+            "autoLoad": true,
+            "hotSpots": [
+                {
+                    "pitch": 5.0,
+                    "yaw": 130.0,
+                    "type": "scene",
+                    "text": "Go to Kitchen",
+                    "sceneId": "kitchen"
+                },
+		{
+                    "pitch": 5.0,
+                    "yaw": -10.0,
+                    "type": "scene",
+                    "text": "Go to Balcony",
+                    "sceneId": "balcony"
+                },
+                {
+                    "pitch": 5.0,
+                    "yaw": 190.0,
+                    "type": "scene",
+                    "text": "Go to Hallway",
+                    "sceneId": "hallway"
+                }
+            ]
+        },
+        "kitchen": {
+            "title": "Kitchen",
+            "type": "equirectangular",
+            "panorama": "city/kitchen_360_equirectangular_4096x2048.png",
+            "hotSpots": [
+                {
+                    "pitch": 0.0,
+                    "yaw": 120.0,
+                    "type": "scene",
+                    "text": "Go to Living Room",
+                    "sceneId": "livingroom"
+                }
+            ]
+        },
+	"balcony": {
+            "title": "Balcony",
+            "type": "equirectangular",
+            "panorama": "city/balcony_360_equirectangular_4096x2048.png",
+            "hotSpots": [
+                {
+                    "pitch": 0.0,
+                    "yaw": 180.0,
+                    "type": "scene",
+                    "text": "Go to Living Room",
+                    "sceneId": "livingroom"
+                }
+            ]
+        },
+        "hallway": {
+            "title": "Hallway",
+            "type": "equirectangular",
+            "panorama": "city/hallway_360_equirectangular_4096x2048.png",
+            "hotSpots": [
+                {
+                    "pitch": 0.0,
+                    "yaw": -160.0,
+                    "type": "scene",
+                    "text": "Go to Living Room",
+                    "sceneId": "livingroom"
+                },
+		{
+                    "pitch": 0.0,
+                    "yaw": 60.0,
+                    "type": "scene",
+                    "text": "Go to Bedroom-1",
+                    "sceneId": "bedroom1"
+                },
+		{
+                    "pitch": 0.0,
+                    "yaw": 5.0,
+                    "type": "scene",
+                    "text": "Go to Bedroom-2",
+                    "sceneId": "bedroom2"
+                },
+		{
+                    "pitch": 0.0,
+                    "yaw": 16.0,
+                    "type": "scene",
+                    "text": "Go to Master Bedroom",
+                    "sceneId": "mbedroom"
+                },
+
+		{
+                    "pitch": 0.0,
+                    "yaw": -50.0,
+                    "type": "scene",
+                    "text": "Go to Common Bathroom",
+                    "sceneId": "commonbath"
+                }
+            ]
+        },
+	    "commonbath": {
+            "title": "Common Bath",
+            "type": "equirectangular",
+            "panorama": "city/common-bath_360_equirectangular_4096x2048.png",
+            "hotSpots": [
+               	{
+                    "pitch": 5.0,
+                    "yaw": 160.0,
+                    "type": "scene",
+                    "text": "Go to Hallway",
+                    "sceneId": "hallway"
+                }
+            ]
+        },
+	"bedroom1": {
+            "title": "Bedroom 1",
+            "type": "equirectangular",
+            "panorama": "city/bed11x12_360_equirectangular_4096x2048.png",
+            "hotSpots": [
+               	{
+                    "pitch": 5.0,
+                    "yaw": 160.0,
+                    "type": "scene",
+                    "text": "Go to Hallway",
+                    "sceneId": "hallway"
+                }
+            ]
+        },
+	"mbedroom": {
+            "title": "Master Bedroom",
+            "type": "equirectangular",
+            "panorama": "city/bed-master_360_equirectangular_4096x2048.png",
+            "hotSpots": [
+               	{
+                    "pitch": 5.0,
+                    "yaw": 200.0,
+                    "type": "scene",
+                    "text": "Go to Hallway",
+                    "sceneId": "hallway"
+                }
+            ]
+        },
+	"bedroom2": {
+            "title": "Bedroom 2",
+            "type": "equirectangular",
+            "panorama": "city/bed14x15_360_equirectangular_4096x2048.png",
+            "hotSpots": [
+               	{
+                    "pitch": 5.0,
+                    "yaw": 195.0,
+                    "type": "scene",
+                    "text": "Go to Hallway",
+                    "sceneId": "hallway"
+                }
+            ]
+        }
+
+    }
+}

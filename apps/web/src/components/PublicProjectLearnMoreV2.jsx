@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import PannellumTourOverlay, { DEFAULT_UNIT_TOUR_CONFIG_URL } from './PannellumTourOverlay.jsx';
 
 function normalizeList(value) {
   if (Array.isArray(value)) {
@@ -110,6 +111,7 @@ export default function PublicProjectLearnMoreV2({ project, onHome, onBack }) {
   const [selectedUnitId, setSelectedUnitId] = useState('');
   const [selectedGalleryIndex, setSelectedGalleryIndex] = useState(0);
   const [previewMode, setPreviewMode] = useState('floor');
+  const [tourOpen, setTourOpen] = useState(false);
 
   const selectedBuilding = useMemo(
     () => findDefaultBuilding(project, selectedBuildingId),
@@ -183,6 +185,7 @@ export default function PublicProjectLearnMoreV2({ project, onHome, onBack }) {
 
   useEffect(() => {
     setSelectedGalleryIndex(0);
+    setTourOpen(false);
   }, [selectedUnitId]);
 
   useEffect(() => {
@@ -334,6 +337,13 @@ export default function PublicProjectLearnMoreV2({ project, onHome, onBack }) {
                   <strong>{selectedUnit.unitNumber}</strong>
                   <span>{joinNonEmpty([selectedUnit.unitCode, selectedUnit.unitType, `Floor ${selectedFloor?.floorNumber || ''}`])}</span>
                   <small>{unitGalleryImages.length ? `${unitGalleryImages.length} gallery view(s)` : 'No unit gallery uploaded yet'}</small>
+                  <button
+                    type="button"
+                    className="public-learnmore-summary__tour"
+                    onClick={() => setTourOpen(true)}
+                  >
+                    View 360° tour
+                  </button>
                 </div>
               ) : (
                 <div className="public-learnmore-card__empty">Choose a unit to view its gallery.</div>
@@ -366,6 +376,14 @@ export default function PublicProjectLearnMoreV2({ project, onHome, onBack }) {
               disabled={!selectedUnit || !unitGalleryImages.length}
             >
               Gallery
+            </button>
+            <button
+              type="button"
+              className={tourOpen ? 'is-active' : ''}
+              onClick={() => setTourOpen(true)}
+              disabled={!selectedUnit}
+            >
+              360°
             </button>
           </div>
 
@@ -421,6 +439,15 @@ export default function PublicProjectLearnMoreV2({ project, onHome, onBack }) {
           ) : null}
         </section>
       </section>
+
+      {tourOpen && selectedUnit ? (
+        <PannellumTourOverlay
+          configUrl={DEFAULT_UNIT_TOUR_CONFIG_URL}
+          title={`${selectedUnit.unitNumber} · 360° tour`}
+          subtitle={joinNonEmpty([selectedUnit.unitCode, selectedUnit.unitType, selectedFloor?.floorName || `Floor ${selectedFloor?.floorNumber || ''}`])}
+          onClose={() => setTourOpen(false)}
+        />
+      ) : null}
     </div>
   );
 }
