@@ -3,11 +3,12 @@
  * Purpose: Fullscreen Pannellum 360° multi-scene tour overlay for unit detail.
  * Author: Portal team
  * Date: 2026-09-13
- * Dependencies: react, /pannellum/pannellum.js, /pannellum/pannellum.css
+ * Dependencies: react, ./PannellumTourOverlay.css, /pannellum/pannellum.js, /pannellum/pannellum.css
  * Usage:
  *   <PannellumTourOverlay configUrl="/pannellum/tours/city-unit/vt.json" title="Unit tour" onClose={...} />
  */
 import React, { useEffect, useRef, useState } from 'react';
+import './PannellumTourOverlay.css';
 
 const SCRIPT_ID = 'pannellum-script';
 const STYLE_ID = 'pannellum-style';

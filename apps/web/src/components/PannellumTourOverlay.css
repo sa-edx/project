@@ -1,0 +1,76 @@
+/* Fullscreen 360° tour overlay — kept next to the component so prod builds
+   always include these rules even if styles.css is not redeployed. */
+
+.public-pannellum-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0.85rem;
+  padding: 1rem;
+  padding-top: 3rem;
+  margin: 0;
+  border-radius: 0;
+  background: rgba(6, 12, 22, 0.96);
+  border: none;
+  color: #f8fafc;
+  box-sizing: border-box;
+}
+
+.public-pannellum-overlay__close {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  z-index: 2;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.public-pannellum-overlay__head h3 {
+  margin: 0.15rem 0 0;
+  color: #f8fafc;
+}
+
+.public-pannellum-overlay__head p {
+  margin: 0.2rem 0 0;
+  color: rgba(248, 250, 252, 0.72);
+}
+
+.public-pannellum-overlay__frame {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #000;
+}
+
+.public-pannellum-overlay__viewer {
+  width: 100%;
+  height: 100%;
+  min-height: min(78vh, 52rem);
+}
+
+.public-pannellum-overlay__status {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  text-align: center;
+  color: rgba(248, 250, 252, 0.86);
+  background: rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
