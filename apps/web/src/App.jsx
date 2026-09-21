@@ -476,7 +476,7 @@ export default function App() {
 
   const [loginForm, setLoginForm] = useState({
     email: 'admin@example.com',
-    password: 'Admin1234!',
+    password: '',
   });
   const [developerForm, setDeveloperForm] = useState(emptyDeveloperForm);
   const [userForm, setUserForm] = useState(emptyUserForm);
