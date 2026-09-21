@@ -26,6 +26,33 @@ function joinNonEmpty(values) {
   return values.filter(Boolean).join(' · ');
 }
 
+/** Distinct tourConfigUrl values already used by units in this project (for sharing). */
+function collectProjectSharedTours(project) {
+  const byUrl = new Map();
+
+  for (const building of project?.buildings || []) {
+    for (const floor of building.floors || []) {
+      for (const unit of floor.units || []) {
+        const url = typeof unit.tourConfigUrl === 'string' ? unit.tourConfigUrl.trim() : '';
+        if (!url) {
+          continue;
+        }
+
+        if (!byUrl.has(url)) {
+          byUrl.set(url, {
+            tourConfigUrl: url,
+            unitLabels: [],
+          });
+        }
+
+        byUrl.get(url).unitLabels.push(unit.unitNumber || unit.unitCode || unit.id.slice(0, 8));
+      }
+    }
+  }
+
+  return [...byUrl.values()].sort((left, right) => left.tourConfigUrl.localeCompare(right.tourConfigUrl));
+}
+
 function parseList(value) {
   return String(value || '')
     .split(/[\n,]+/)
@@ -340,13 +367,19 @@ export default function StructureManagerV2({
   onDeleteBuilding,
   onDeleteFloor,
   onDeleteUnit,
+  onUploadUnitVirtualTour,
+  onSetUnitVirtualTourUrl,
+  onDeleteUnitVirtualTour,
+  onLinkProjectDefaultVirtualTour,
   onCreateNearbyDestination,
   onUpdateNearbyDestination,
   onDeleteNearbyDestination,
   busy,
 }) {
-  const [activeTab, setActiveTab] = useState('create');
+  const [activeTab, setActiveTab] = useState('tours');
   const [structureSearch, setStructureSearch] = useState('');
+  const [tourUrlDraft, setTourUrlDraft] = useState('');
+  const [tourBusy, setTourBusy] = useState(false);
   const [structureStatus, setStructureStatus] = useState('all');
   const [draggedFloor, setDraggedFloor] = useState(null);
   const [selectedNearbyDestinationId, setSelectedNearbyDestinationId] = useState('');
@@ -404,6 +437,8 @@ export default function StructureManagerV2({
   const filteredBuildings = filterStructureBuildings(buildings, structureSearch, structureStatus);
   const nearbyDestinations = getSortedNearbyDestinations(project);
   const selectedNearbyDestination = nearbyDestinations.find((destination) => destination.id === selectedNearbyDestinationId) || nearbyDestinations[0] || null;
+  const sharedTours = collectProjectSharedTours(project);
+  const DEMO_TOUR_URL = '/pannellum/tours/city-unit/vt.json';
 
   async function commitFloorOrder(orderedFloors) {
     for (let index = 0; index < orderedFloors.length; index += 1) {
@@ -479,6 +514,7 @@ export default function StructureManagerV2({
         amenities: normalizeList(selectedUnit.amenities),
       });
       setUnitEditGalleryUrl('');
+      setTourUrlDraft(selectedUnit.tourConfigUrl || '');
     }
   }, [selectedUnit]);
 
@@ -693,6 +729,17 @@ export default function StructureManagerV2({
                           <small>{formatMoney(unit.basePrice, unit.currency)}</small>
                           <small>{unit.status}</small>
                           <small>{`Layout ${unit.layoutPlan ? 'Yes' : 'No'} | Gallery views ${unit.media?.length || 0} | Amenities ${unit.amenities?.length || 0}`}</small>
+                          <small>{unit.tourConfigUrl ? `360° linked` : '360° missing'}</small>
+                          <button
+                            type="button"
+                            className="ghost unit-select"
+                            onClick={() => {
+                              setSelectedUnitId(unit.id);
+                              setActiveTab('tours');
+                            }}
+                          >
+                            Tour
+                          </button>
                           <button
                             type="button"
                             className="ghost unit-select"
@@ -1082,9 +1129,353 @@ export default function StructureManagerV2({
             <input type="checkbox" checked={unitEditForm.featured} onChange={(e) => setUnitEditForm((c) => ({ ...c, featured: e.target.checked }))} />
             Featured unit
           </label>
+
+          <div className="media-upload">
+            <div className="panel-head panel-head--compact">
+              <h4>360° virtual tour</h4>
+              <p>
+                Multiple units can share one tour. Link an existing tour, or upload a new ZIP
+                (must include <code>vt.json</code> + panoramas). Uploaded tours become available to link on other units.
+              </p>
+            </div>
+
+            <label className="stack">
+              <span>Link existing tour</span>
+              <select
+                value={selectedUnit?.tourConfigUrl || ''}
+                disabled={busy || tourBusy || !selectedUnitId || !onSetUnitVirtualTourUrl}
+                onChange={async (event) => {
+                  if (!selectedUnitId || !onSetUnitVirtualTourUrl) {
+                    return;
+                  }
+                  const nextUrl = event.target.value;
+                  setTourBusy(true);
+                  try {
+                    if (!nextUrl) {
+                      if (onDeleteUnitVirtualTour) {
+                        await onDeleteUnitVirtualTour(selectedUnitId);
+                      } else {
+                        await onSetUnitVirtualTourUrl(selectedUnitId, null);
+                      }
+                      setTourUrlDraft('');
+                    } else {
+                      await onSetUnitVirtualTourUrl(selectedUnitId, nextUrl);
+                      setTourUrlDraft(nextUrl);
+                    }
+                  } finally {
+                    setTourBusy(false);
+                  }
+                }}
+              >
+                <option value="">No tour (unlink this unit)</option>
+                <option value={DEMO_TOUR_URL}>Demo · city-unit tour</option>
+                {sharedTours
+                  .filter((tour) => tour.tourConfigUrl !== DEMO_TOUR_URL)
+                  .map((tour) => (
+                    <option key={tour.tourConfigUrl} value={tour.tourConfigUrl}>
+                      {tour.unitLabels.slice(0, 4).join(', ')}
+                      {tour.unitLabels.length > 4 ? ` +${tour.unitLabels.length - 4}` : ''}
+                      {` · ${tour.tourConfigUrl}`}
+                    </option>
+                  ))}
+              </select>
+            </label>
+
+            {selectedUnit?.tourConfigUrl ? (
+              <p className="empty-inline">
+                Linked tour: <code>{selectedUnit.tourConfigUrl}</code>
+                {sharedTours.find((tour) => tour.tourConfigUrl === selectedUnit.tourConfigUrl)?.unitLabels.length > 1
+                  ? ` (shared with ${sharedTours.find((tour) => tour.tourConfigUrl === selectedUnit.tourConfigUrl).unitLabels.length} units)`
+                  : ''}
+              </p>
+            ) : (
+              <p className="empty-inline">This unit has no 360° tour linked yet.</p>
+            )}
+
+            <div className="panel-head panel-head--compact">
+              <h4>Or upload a new tour</h4>
+              <p>Creates a shared tour package and links it to this unit. Other units can then pick it from the list above.</p>
+            </div>
+            <input
+              type="file"
+              accept=".zip,application/zip"
+              disabled={busy || tourBusy || !selectedUnitId || !onUploadUnitVirtualTour}
+              onChange={async (event) => {
+                const file = event.target.files?.[0];
+                event.target.value = '';
+                if (!file || !selectedUnitId || !onUploadUnitVirtualTour) {
+                  return;
+                }
+                setTourBusy(true);
+                try {
+                  await onUploadUnitVirtualTour(selectedUnitId, file);
+                } finally {
+                  setTourBusy(false);
+                }
+              }}
+            />
+
+            <div className="media-upload__controls">
+              <input
+                type="text"
+                placeholder="Or paste any tour config URL"
+                value={tourUrlDraft}
+                onChange={(e) => setTourUrlDraft(e.target.value)}
+                disabled={busy || tourBusy || !selectedUnitId}
+              />
+              <button
+                type="button"
+                className="ghost"
+                disabled={busy || tourBusy || !selectedUnitId || !onSetUnitVirtualTourUrl || !tourUrlDraft.trim()}
+                onClick={async () => {
+                  if (!selectedUnitId || !onSetUnitVirtualTourUrl) {
+                    return;
+                  }
+                  setTourBusy(true);
+                  try {
+                    await onSetUnitVirtualTourUrl(selectedUnitId, tourUrlDraft.trim());
+                  } finally {
+                    setTourBusy(false);
+                  }
+                }}
+              >
+                Link URL
+              </button>
+            </div>
+
+            <button
+              type="button"
+              className="ghost"
+              disabled={busy || tourBusy || !selectedUnitId || !selectedUnit?.tourConfigUrl || !onDeleteUnitVirtualTour}
+              onClick={async () => {
+                if (!selectedUnitId || !onDeleteUnitVirtualTour) {
+                  return;
+                }
+                setTourBusy(true);
+                try {
+                  await onDeleteUnitVirtualTour(selectedUnitId);
+                  setTourUrlDraft('');
+                } finally {
+                  setTourBusy(false);
+                }
+              }}
+            >
+              Unlink tour from this unit
+            </button>
+          </div>
+
           <button type="submit" disabled={busy || !selectedUnitId}>Save Unit</button>
         </form>
       </div>
+    </div>
+  );
+
+  const allUnits = buildings.flatMap((building) =>
+    (building.floors || []).flatMap((floor) =>
+      (floor.units || []).map((unit) => ({
+        ...unit,
+        buildingName: building.buildingName,
+        floorNumber: floor.floorNumber,
+      })),
+    ),
+  );
+  const unitsMissingTour = allUnits.filter((unit) => !unit.tourConfigUrl);
+  const unitsWithTour = allUnits.filter((unit) => Boolean(unit.tourConfigUrl));
+
+  const tourControls = (
+    <div className="media-upload">
+      <label className="stack">
+        <span>Select unit</span>
+        <select
+          value={selectedUnitId}
+          onChange={(e) => setSelectedUnitId(e.target.value)}
+        >
+          <option value="">Select unit</option>
+          {allUnits.map((unit) => (
+            <option key={unit.id} value={unit.id}>
+              {unit.buildingName} | Floor {unit.floorNumber} | {unit.unitNumber}
+              {unit.tourConfigUrl ? ' · 360 linked' : ' · no tour'}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label className="stack">
+        <span>Link existing tour</span>
+        <select
+          value={selectedUnit?.tourConfigUrl || ''}
+          disabled={busy || tourBusy || !selectedUnitId || !onSetUnitVirtualTourUrl}
+          onChange={async (event) => {
+            if (!selectedUnitId || !onSetUnitVirtualTourUrl) {
+              return;
+            }
+            const nextUrl = event.target.value;
+            setTourBusy(true);
+            try {
+              if (!nextUrl) {
+                if (onDeleteUnitVirtualTour) {
+                  await onDeleteUnitVirtualTour(selectedUnitId);
+                } else {
+                  await onSetUnitVirtualTourUrl(selectedUnitId, null);
+                }
+                setTourUrlDraft('');
+              } else {
+                await onSetUnitVirtualTourUrl(selectedUnitId, nextUrl);
+                setTourUrlDraft(nextUrl);
+              }
+            } finally {
+              setTourBusy(false);
+            }
+          }}
+        >
+          <option value="">No tour (unlink this unit)</option>
+          <option value={DEMO_TOUR_URL}>Demo · city-unit tour</option>
+          {sharedTours
+            .filter((tour) => tour.tourConfigUrl !== DEMO_TOUR_URL)
+            .map((tour) => (
+              <option key={tour.tourConfigUrl} value={tour.tourConfigUrl}>
+                {tour.unitLabels.slice(0, 4).join(', ')}
+                {tour.unitLabels.length > 4 ? ` +${tour.unitLabels.length - 4}` : ''}
+                {` · ${tour.tourConfigUrl}`}
+              </option>
+            ))}
+        </select>
+      </label>
+
+      {selectedUnit?.tourConfigUrl ? (
+        <p className="empty-inline">
+          Linked tour: <code>{selectedUnit.tourConfigUrl}</code>
+        </p>
+      ) : (
+        <p className="empty-inline">This unit has no 360° tour linked yet.</p>
+      )}
+
+      <div className="panel-head panel-head--compact">
+        <h4>Upload a new shared tour</h4>
+        <p>ZIP with <code>vt.json</code> + panoramas. After upload, other units can link the same tour.</p>
+      </div>
+      <input
+        type="file"
+        accept=".zip,application/zip"
+        disabled={busy || tourBusy || !selectedUnitId || !onUploadUnitVirtualTour}
+        onChange={async (event) => {
+          const file = event.target.files?.[0];
+          event.target.value = '';
+          if (!file || !selectedUnitId || !onUploadUnitVirtualTour) {
+            return;
+          }
+          setTourBusy(true);
+          try {
+            await onUploadUnitVirtualTour(selectedUnitId, file);
+          } finally {
+            setTourBusy(false);
+          }
+        }}
+      />
+
+      <div className="media-upload__controls">
+        <input
+          type="text"
+          placeholder="Or paste any tour config URL"
+          value={tourUrlDraft}
+          onChange={(e) => setTourUrlDraft(e.target.value)}
+          disabled={busy || tourBusy || !selectedUnitId}
+        />
+        <button
+          type="button"
+          className="ghost"
+          disabled={busy || tourBusy || !selectedUnitId || !onSetUnitVirtualTourUrl || !tourUrlDraft.trim()}
+          onClick={async () => {
+            if (!selectedUnitId || !onSetUnitVirtualTourUrl) {
+              return;
+            }
+            setTourBusy(true);
+            try {
+              await onSetUnitVirtualTourUrl(selectedUnitId, tourUrlDraft.trim());
+            } finally {
+              setTourBusy(false);
+            }
+          }}
+        >
+          Link URL
+        </button>
+      </div>
+
+      <button
+        type="button"
+        className="ghost"
+        disabled={busy || tourBusy || !selectedUnitId || !selectedUnit?.tourConfigUrl || !onDeleteUnitVirtualTour}
+        onClick={async () => {
+          if (!selectedUnitId || !onDeleteUnitVirtualTour) {
+            return;
+          }
+          setTourBusy(true);
+          try {
+            await onDeleteUnitVirtualTour(selectedUnitId);
+            setTourUrlDraft('');
+          } finally {
+            setTourBusy(false);
+          }
+        }}
+      >
+        Unlink tour from this unit
+      </button>
+    </div>
+  );
+
+  const toursPanel = (
+    <div className="panel nested-panel">
+      <div className="panel-head">
+        <p className="eyebrow">360° tours</p>
+        <h3>Link or upload virtual tours</h3>
+        <p>
+          Units can share one tour. Use bulk link for the built-in city-unit demo, or upload a ZIP and reuse it across units.
+        </p>
+      </div>
+
+      <div className="structure-summary">
+        <SummaryCard label="Units" value={allUnits.length} hint="in this project" />
+        <SummaryCard label="With 360°" value={unitsWithTour.length} hint={`${sharedTours.length} shared tour(s)`} />
+        <SummaryCard label="Missing 360°" value={unitsMissingTour.length} hint="need a link" />
+      </div>
+
+      <div className="stack" style={{ marginBottom: '1rem' }}>
+        <div className="split">
+          <button
+            type="button"
+            disabled={busy || tourBusy || !onLinkProjectDefaultVirtualTour || !unitsMissingTour.length}
+            onClick={() => onLinkProjectDefaultVirtualTour?.(DEMO_TOUR_URL, 'missing')}
+          >
+            Link demo tour to all units missing a tour ({unitsMissingTour.length})
+          </button>
+          <button
+            type="button"
+            className="ghost"
+            disabled={busy || tourBusy || !onLinkProjectDefaultVirtualTour || !allUnits.length}
+            onClick={() => onLinkProjectDefaultVirtualTour?.(DEMO_TOUR_URL, 'all')}
+          >
+            Re-link demo tour on every unit ({allUnits.length})
+          </button>
+        </div>
+        <p className="empty-inline">
+          Demo tour path: <code>{DEMO_TOUR_URL}</code>
+        </p>
+      </div>
+
+      {tourControls}
+
+      {sharedTours.length ? (
+        <div className="stack" style={{ marginTop: '1rem' }}>
+          <h4>Tours in use</h4>
+          {sharedTours.map((tour) => (
+            <article className="unit-card" key={tour.tourConfigUrl}>
+              <strong>{tour.unitLabels.length} unit(s)</strong>
+              <small>{tour.unitLabels.join(', ')}</small>
+              <code>{tour.tourConfigUrl}</code>
+            </article>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 
@@ -1288,6 +1679,7 @@ export default function StructureManagerV2({
       </div>
 
       <div className="tab-bar">
+        <button type="button" className={activeTab === 'tours' ? '' : 'ghost'} onClick={() => setActiveTab('tours')}>Virtual Tours</button>
         <button type="button" className={activeTab === 'create' ? '' : 'ghost'} onClick={() => setActiveTab('create')}>Create</button>
         <button type="button" className={activeTab === 'edit' ? '' : 'ghost'} onClick={() => setActiveTab('edit')}>Edit Selected</button>
         <button type="button" className={activeTab === 'tree' ? '' : 'ghost'} onClick={() => setActiveTab('tree')}>Tree</button>
@@ -1295,7 +1687,7 @@ export default function StructureManagerV2({
 
       <div className="structure-manager__layout">
         <div className="structure-manager__main">
-          {activeTab === 'create' ? createPanel : activeTab === 'edit' ? editPanel : tree}
+          {activeTab === 'tours' ? toursPanel : activeTab === 'create' ? createPanel : activeTab === 'edit' ? editPanel : tree}
           {routePanel}
         </div>
       <ContextPanel

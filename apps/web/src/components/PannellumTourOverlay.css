@@ -1,5 +1,6 @@
-/* Fullscreen 360° tour overlay — kept next to the component so prod builds
-   always include these rules even if styles.css is not redeployed. */
+/* Fullscreen 360° tour overlay.
+   Do not use the shared `.panel` class here — it forces a light background and
+   hides white title/close controls on production builds. */
 
 .public-pannellum-overlay {
   position: fixed;
@@ -14,6 +15,8 @@
   border-radius: 0;
   background: rgba(6, 12, 22, 0.96);
   border: none;
+  box-shadow: none;
+  backdrop-filter: none;
   color: #f8fafc;
   box-sizing: border-box;
 }
@@ -29,22 +32,32 @@
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
   color: #f8fafc;
   font-size: 1.15rem;
   line-height: 1;
   cursor: pointer;
 }
 
-.public-pannellum-overlay__head h3 {
-  margin: 0.15rem 0 0;
+.public-pannellum-overlay__close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.public-pannellum-overlay__head,
+.public-pannellum-overlay__head h3,
+.public-pannellum-overlay__eyebrow {
   color: #f8fafc;
 }
 
-.public-pannellum-overlay__head p {
+.public-pannellum-overlay__head h3 {
+  margin: 0.15rem 0 0;
+}
+
+.public-pannellum-overlay__head p,
+.public-pannellum-overlay__eyebrow {
   margin: 0.2rem 0 0;
-  color: rgba(248, 250, 252, 0.72);
+  color: rgba(248, 250, 252, 0.78);
 }
 
 .public-pannellum-overlay__frame {

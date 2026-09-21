@@ -1,5 +1,38 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import PannellumTourOverlay, { DEFAULT_UNIT_TOUR_CONFIG_URL } from './PannellumTourOverlay.jsx';
+import PannellumTourOverlay from './PannellumTourOverlay.jsx';
+import { resolveMediaUrl } from '../mediaUrl.js';
+
+function resolveTourConfigUrl(value) {
+  if (typeof value !== 'string') {
+    return '';
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return '';
+  }
+
+  if (
+    trimmed.startsWith('http://') ||
+    trimmed.startsWith('https://') ||
+    trimmed.startsWith('data:') ||
+    trimmed.startsWith('blob:')
+  ) {
+    return trimmed;
+  }
+
+  // Uploaded tours live on the API /uploads static mount.
+  if (trimmed.startsWith('/uploads/')) {
+    return resolveMediaUrl(trimmed);
+  }
+
+  // Built-in demo assets live on the SPA origin (Vite public / dist).
+  if (trimmed.startsWith('/')) {
+    return trimmed;
+  }
+
+  return resolveMediaUrl(trimmed);
+}
 
 function normalizeList(value) {
   if (Array.isArray(value)) {
@@ -132,6 +165,11 @@ export default function PublicProjectLearnMoreV2({ project, onHome, onBack }) {
   const floorImage = getImageSource(selectedFloor?.floorPlan);
   const unitLayoutImage = getImageSource(selectedUnit?.layoutPlan);
   const unitGalleryImages = useMemo(() => collectUnitMedia(selectedUnit).filter(isImageSource), [selectedUnit]);
+  const unitTourConfigUrl = useMemo(
+    () => resolveTourConfigUrl(selectedUnit?.tourConfigUrl || ''),
+    [selectedUnit?.tourConfigUrl],
+  );
+  const hasUnitTour = Boolean(unitTourConfigUrl);
   const activeMedia =
     previewMode === 'gallery'
       ? unitGalleryImages[selectedGalleryIndex] || unitLayoutImage || floorImage || mainImage
@@ -337,13 +375,17 @@ export default function PublicProjectLearnMoreV2({ project, onHome, onBack }) {
                   <strong>{selectedUnit.unitNumber}</strong>
                   <span>{joinNonEmpty([selectedUnit.unitCode, selectedUnit.unitType, `Floor ${selectedFloor?.floorNumber || ''}`])}</span>
                   <small>{unitGalleryImages.length ? `${unitGalleryImages.length} gallery view(s)` : 'No unit gallery uploaded yet'}</small>
-                  <button
-                    type="button"
-                    className="public-learnmore-summary__tour"
-                    onClick={() => setTourOpen(true)}
-                  >
-                    View 360° tour
-                  </button>
+                  {hasUnitTour ? (
+                    <button
+                      type="button"
+                      className="public-learnmore-summary__tour"
+                      onClick={() => setTourOpen(true)}
+                    >
+                      View 360° tour
+                    </button>
+                  ) : (
+                    <small>No 360° tour uploaded for this unit</small>
+                  )}
                 </div>
               ) : (
                 <div className="public-learnmore-card__empty">Choose a unit to view its gallery.</div>
@@ -381,7 +423,7 @@ export default function PublicProjectLearnMoreV2({ project, onHome, onBack }) {
               type="button"
               className={tourOpen ? 'is-active' : ''}
               onClick={() => setTourOpen(true)}
-              disabled={!selectedUnit}
+              disabled={!selectedUnit || !hasUnitTour}
             >
               360°
             </button>
@@ -440,9 +482,9 @@ export default function PublicProjectLearnMoreV2({ project, onHome, onBack }) {
         </section>
       </section>
 
-      {tourOpen && selectedUnit ? (
+      {tourOpen && selectedUnit && hasUnitTour ? (
         <PannellumTourOverlay
-          configUrl={DEFAULT_UNIT_TOUR_CONFIG_URL}
+          configUrl={unitTourConfigUrl}
           title={`${selectedUnit.unitNumber} · 360° tour`}
           subtitle={joinNonEmpty([selectedUnit.unitCode, selectedUnit.unitType, selectedFloor?.floorName || `Floor ${selectedFloor?.floorNumber || ''}`])}
           onClose={() => setTourOpen(false)}

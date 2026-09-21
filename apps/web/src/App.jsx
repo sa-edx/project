@@ -1,4 +1,14 @@
-﻿import React, { useEffect, useMemo, useRef, useState } from 'react';
+﻿/**
+ * File: apps/web/src/App.jsx
+ * Purpose: Application shell — public vs admin modes, data loading, fullscreen Cesium map, CRUD orchestration.
+ * Author: Portal team
+ * Date: 2026-09-07
+ * Dependencies: react, ./api.js, ./components/*, ./mediaUrl.js, ./mapBuildingMarker.js
+ * Usage: Mounted by main.jsx. Navigation is local state (no React Router):
+ *   mode: 'public' | 'admin'
+ *   publicView: 'home' | 'project' | 'detail'
+ */
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   assignAmenityToProject,
   assignFacilityToProject,
@@ -21,6 +31,10 @@ import {
   deleteProjectAmenity,
   deleteProject,
   deleteUnit,
+  uploadUnitVirtualTour,
+  setUnitVirtualTourUrl,
+  deleteUnitVirtualTour,
+  linkProjectDefaultVirtualTour,
   getMe,
   getPublicProject,
   listAmenities,
@@ -1567,6 +1581,70 @@ export default function App() {
     }
   }
 
+  async function handleUploadUnitVirtualTour(unitId, file) {
+    setBusy(true);
+    setError('');
+    try {
+      await uploadUnitVirtualTour(token, unitId, file);
+      await refreshAdminData(selectedAdminProjectId);
+      setMessage('Unit 360° tour uploaded and linked. Other units can reuse it from the tour list.');
+    } catch (requestError) {
+      setError(requestError?.message || 'Failed to upload unit tour.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleSetUnitVirtualTourUrl(unitId, tourConfigUrl) {
+    setBusy(true);
+    setError('');
+    try {
+      await setUnitVirtualTourUrl(token, unitId, tourConfigUrl);
+      await refreshAdminData(selectedAdminProjectId);
+      setMessage(tourConfigUrl ? 'Unit linked to 360° tour.' : 'Unit unlinked from 360° tour.');
+    } catch (requestError) {
+      setError(requestError?.message || 'Failed to save unit tour URL.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleDeleteUnitVirtualTour(unitId) {
+    setBusy(true);
+    setError('');
+    try {
+      await deleteUnitVirtualTour(token, unitId);
+      await refreshAdminData(selectedAdminProjectId);
+      setMessage('Unit unlinked from 360° tour.');
+    } catch (requestError) {
+      setError(requestError?.message || 'Failed to remove unit tour.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleLinkProjectDefaultVirtualTour(tourConfigUrl, mode = 'missing') {
+    if (!selectedAdminProjectId) {
+      setError('Select a project first.');
+      return;
+    }
+
+    setBusy(true);
+    setError('');
+    try {
+      const response = await linkProjectDefaultVirtualTour(token, selectedAdminProjectId, {
+        tourConfigUrl,
+        mode,
+      });
+      await refreshAdminData(selectedAdminProjectId);
+      setMessage(response?.message || 'Units linked to 360° tour.');
+    } catch (requestError) {
+      setError(requestError?.message || 'Failed to link units to tour.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function handleCreateNearbyDestination(payload) {
     if (!selectedAdminProjectId) {
       setError('Select a project first.');
@@ -2182,6 +2260,10 @@ export default function App() {
               onDeleteBuilding={handleDeleteBuilding}
               onDeleteFloor={handleDeleteFloor}
               onDeleteUnit={handleDeleteUnit}
+              onUploadUnitVirtualTour={handleUploadUnitVirtualTour}
+              onSetUnitVirtualTourUrl={handleSetUnitVirtualTourUrl}
+              onDeleteUnitVirtualTour={handleDeleteUnitVirtualTour}
+              onLinkProjectDefaultVirtualTour={handleLinkProjectDefaultVirtualTour}
               onCreateNearbyDestination={handleCreateNearbyDestination}
               onUpdateNearbyDestination={handleUpdateNearbyDestination}
               onDeleteNearbyDestination={handleDeleteNearbyDestination}

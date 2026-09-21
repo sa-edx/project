@@ -169,6 +169,7 @@ model Unit {
   layoutPlan   String?
   media        Json?
   amenities    Json?
+  tourConfigUrl String?
   leads        Lead[]       @relation("UnitLeads")
   siteVisits   SiteVisit[]  @relation("UnitSiteVisits")
   bookings     Booking[]

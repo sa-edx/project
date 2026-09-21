@@ -200,13 +200,13 @@ export default function PannellumTourOverlay({
   }, [onClose]);
 
   return (
-    <section className="public-pannellum-overlay panel" role="dialog" aria-modal="true" aria-label={title}>
+    <section className="public-pannellum-overlay" role="dialog" aria-modal="true" aria-label={title}>
       <button type="button" className="public-pannellum-overlay__close" onClick={onClose} aria-label="Close 360 tour">
         ×
       </button>
       <div className="public-pannellum-overlay__head">
         <div>
-          <p className="eyebrow">360° tour</p>
+          <p className="eyebrow public-pannellum-overlay__eyebrow">360° tour</p>
           <h3>{title}</h3>
           {subtitle ? <p>{subtitle}</p> : null}
         </div>

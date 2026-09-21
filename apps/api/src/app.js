@@ -1,3 +1,14 @@
+/**
+ * File: apps/api/src/app.js
+ * Purpose: Compose the Express application — middleware, static uploads, domain routers, error mapping.
+ * Author: Portal team
+ * Date: 2026-09-07
+ * Dependencies: express, cors, morgan, Prisma client, Zod, ./routes/*, ./middleware/auth.js
+ * Usage:
+ *   import { createApp } from './app.js';
+ *   const app = createApp();
+ * Mount order matters: model3d + public project GETs are registered before projectsRouter.
+ */
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -15,6 +26,7 @@ import { healthRouter } from './routes/health.js';
 import { getProjectHandler, listProjectsHandler, projectsRouter } from './routes/projects.js';
 import { model3dRouter, placementHandlers } from './routes/model3d.js';
 import { structureRouter } from './routes/structure.js';
+import { unitTourRouter } from './routes/unitTour.js';
 import { usersRouter } from './routes/users.js';
 
 export function createApp() {
@@ -47,6 +59,7 @@ export function createApp() {
   app.get('/projects/:id', getProjectHandler);
 
   app.use('/projects', projectsRouter);
+  app.use('/', unitTourRouter);
   app.use('/', structureRouter);
 
   app.use((req, res) => {

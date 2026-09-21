@@ -1,3 +1,14 @@
+/**
+ * File: apps/web/src/api.js
+ * Purpose: Browser HTTP client for the portal API — auth, CRUD helpers, slim project updates, chunked GLB upload.
+ * Author: Portal team
+ * Date: 2026-09-07
+ * Dependencies: fetch, import.meta.env.VITE_API_BASE_URL, ./modelLimits.js
+ * Usage:
+ *   import { login, listPublicProjects, uploadProjectModel3d, updateProject } from './api.js';
+ *   await uploadProjectModel3d(token, projectId, file, { optimize: true, onProgress });
+ * Prod base URL must end with /api (e.g. https://project.odirect.pk/api).
+ */
 import { MODEL_CHUNK_SIZE } from './modelLimits.js';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000';
@@ -553,6 +564,52 @@ export async function deleteUnit(token, unitId) {
   return request(`/units/${unitId}`, {
     token,
     method: 'DELETE',
+  });
+}
+
+export async function uploadUnitVirtualTour(token, unitId, file) {
+  const formData = new FormData();
+  formData.append('tour', file);
+
+  const response = await fetch(`${API_BASE_URL}/units/${unitId}/virtual-tour`, {
+    method: 'POST',
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    body: formData,
+  });
+
+  const contentType = response.headers.get('content-type') || '';
+  const data = contentType.includes('application/json') ? await response.json() : null;
+
+  if (!response.ok) {
+    const error = new Error(data?.message || 'Failed to upload virtual tour.');
+    error.status = response.status;
+    error.payload = data;
+    throw error;
+  }
+
+  return data;
+}
+
+export async function setUnitVirtualTourUrl(token, unitId, tourConfigUrl) {
+  return request(`/units/${unitId}/virtual-tour`, {
+    token,
+    method: 'POST',
+    body: JSON.stringify({ tourConfigUrl }),
+  });
+}
+
+export async function deleteUnitVirtualTour(token, unitId) {
+  return request(`/units/${unitId}/virtual-tour`, {
+    token,
+    method: 'DELETE',
+  });
+}
+
+export async function linkProjectDefaultVirtualTour(token, projectId, payload) {
+  return request(`/projects/${projectId}/virtual-tours/link-default`, {
+    token,
+    method: 'POST',
+    body: JSON.stringify(payload),
   });
 }
 
